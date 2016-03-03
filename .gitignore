@@ -1,2 +1,7 @@
-fuel/app/logs/*/*/*
-fuel/app/cache/*/*
+nogit/*
+nogit/*/*/*
+.php~
+.css~
+.js~
+.html~
+.zip

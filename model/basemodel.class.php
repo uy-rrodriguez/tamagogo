@@ -1,28 +1,35 @@
 <?php
 
-abstract class basemodel {
+abstract class BaseModel {
 
-	public function __construct($pdata = null) {
-	}
+    public function __construct() {
+        echo "<pre>BaseModel()</pre>";
+    }
 
-	public function __set($att, $value) {
-		$this->$att = $value;
-	}
+    public function __set($att, $value) {
+        echo "<pre>". get_class($this) .": __set($att, $value)</pre>";
+        $this->$att = $value;
+    }
 
-	public function __get($att) {
-		if (property_exists(get_class($this), $att) {
-			return $this->$att;
-		}
-		else {
-			throw new Exception("L'attribut $att n'existe pas dans la classe ". get_class($this) .".");
-		}
-	}
+    public function __get($att) {
+        echo "<pre>". get_class($this) .": __get($att)</pre>";
+
+        if (property_exists(get_class($this), $att)) {
+            return $this->$att;
+        }
+        else {
+            throw new Exception("L'attribut $att n'existe pas dans la classe ". get_class($this) .".");
+        }
+    }
 
 	public function __toString() {
+        echo "<pre>". get_class($this) .": __toString()</pre>";
 	    return var_export(get_object_vars($this), true);
 	}
 
 	public function save() {
+        echo "<pre>". get_class($this) .": save()</pre>";
+
         /*
 		$connection = new dbconnection() ;
 		if($this->id)
@@ -55,7 +62,13 @@ abstract class basemodel {
         */
 	}
 
-    public function search($id) {}
+    public function get($id) {
+        echo "<pre>". get_class($this) .": get($id)</pre>";
+    }
+
+    public function getAll() {
+        echo "<pre>". get_class($this) .": getAll()</pre>";
+    }
 }
 
 ?>

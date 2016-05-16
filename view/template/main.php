@@ -15,9 +15,15 @@
 <body>
 
 	<div id="ecran">
+
+    <!-- ------------- IMAGE DU TAMA ACTUEL ----------------------------------------------------- -->
+
 		<div id="tama" class="draggable">
 			<img src="img/tamas/nicolas.png">
 		</div>
+
+
+    <!-- ------------- BARRES AVEC LES ETATS ---------------------------------------------------- -->
 
 		<div id="stats">
 			<div class="stat haut draggable">
@@ -50,6 +56,9 @@
 			</div>
 		</div>
 
+
+    <!-- ------------- ACTIONS DISPONIBLES ------------------------------------------------------ -->
+
 		<div id="actions">
 			<div class="action draggable">
 				<div id="nourrir" class="bouton">
@@ -69,9 +78,24 @@
 				</div>
 				<span class="titre">Soigner</span>
 			</div>
+			<div class="action draggable">
+				<div id="habiller" class="bouton">
+					<img src="img/habiller.png">
+				</div>
+				<span class="titre">Habiller</span>
+			</div>
+			<div class="action draggable">
+				<div id="environnement" class="bouton">
+					<img src="img/environnement.png">
+				</div>
+				<span class="titre">Environnement</span>
+			</div>
 		</div>
 
-        <div id="myModal" class="modal fade" role="dialog">
+
+    <!-- ------------- MODAL QUI DEPEND DES ACTIONS EXECUTEES ----------------------------------- -->
+
+        <div id="modal-action" class="modal fade" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -81,12 +105,13 @@
                         <h4 class="modal-title">Modal title</h4>
                     </div>
                     <div class="modal-body">
-                        <p>One fine body&hellip;</p>
+                        <!-- Ici ira le contenu du modal -->
                     </div>
+                    <!--
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
                     </div>
+                    -->
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->

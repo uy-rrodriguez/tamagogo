@@ -1,10 +1,19 @@
 $(function() {
     $( ".draggable" ).draggable({
-        containment: "#ecran"
+        containment: "#ecran",
+        stop: function(evt, ui) {
+            $(this).find(".bouton").addClass("btn-dragged");
+        }
     });
 
-    $('.bouton').click(function () {
-        charger_modal(this.id)
+    $( ".bouton" ).click(function () {
+        // Il faut vérifier que le bouton n'a pas été déplacé
+        // https://blog.lysender.com/2010/04/jquery-draggable-prevent-click-event/
+        //
+        if ($(this).hasClass("btn-dragged"))
+            $(this).removeClass("btn-dragged");
+        else
+            charger_modal(this.id)
     });
 
     charger_modal("marche");

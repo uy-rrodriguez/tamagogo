@@ -45,7 +45,7 @@
 
 <div class="modal-boutons">
     <div class="gauche">
-        <button type="button" class="btn btn-secondary">March&eacute;</button>
+        <button type="button" class="btn btn-secondary" onclick="charger_modal('marche');">March&eacute;</button>
     </div>
     <div class="droite">
         <button type="button" class="btn btn-primary">Sauvegarder</button>

@@ -208,7 +208,7 @@ div {
     overflow-y: auto;
 }
 
-.modal-liste-simple > .modal-item {
+.modal-liste-simple > a.modal-item {
     display: inline-block;
     width: 80px;
     height: 80px;
@@ -268,16 +268,6 @@ div {
     color: inherit;
 }
 
-.modal-liste-jeux a.modal-item:hover {
-    text-decoration: none;
-}
-
-.modal-liste-jeux a.modal-item:focus {
-    text-decoration: none;
-    border: 2px solid #337ab7;/*#D54242;*/
-    box-shadow: 0px 0px 5px 2px #BBB;
-}
-
 .modal-liste-jeux .jeux-entete {
     position: relative;
     height: 10%;
@@ -334,16 +324,6 @@ div {
     color: inherit;
 }
 
-.modal-liste-marche a.modal-item:hover {
-    text-decoration: none;
-}
-
-.modal-liste-marche a.modal-item:focus {
-    text-decoration: none;
-    border: 2px solid #337ab7;/*#D54242;*/
-    box-shadow: 0px 0px 5px 2px #BBB;
-}
-
 .modal-liste-marche .marche-entete {
     position: relative;
     /*height: 15%;*/
@@ -390,6 +370,16 @@ div {
         inset 0 2px 9px  rgba(255,255,255,0.3),
         inset 0 -2px 6px rgba(0,0,0,0.4);
     border-radius: 15px;
+}
+
+a.modal-item:hover {
+    text-decoration: none;
+}
+
+a.modal-item:focus {
+    text-decoration: none;
+    border: 2px solid #337ab7;/*#D54242;*/
+    box-shadow: 0px 0px 5px 2px #BBB;
 }
 
 

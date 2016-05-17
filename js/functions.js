@@ -16,7 +16,7 @@ $(function() {
             charger_modal(this.id)
     });
 
-    charger_modal("marche");
+    /*charger_modal("marche");*/
 });
 
 

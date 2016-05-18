@@ -28,24 +28,38 @@ function charger_modal(nom_action) {
     $.ajax({
         url: "controller.php",
         method: "post",
-        dataType: "json",
-        data: {action: nom_action}
-    })
-    .done(function(reponse) {
-        var modal = $('#modal-action');
+        /*dataType: "json",*/
+        data: {action: nom_action},
 
-        modal.find($('.modal-title')).html(reponse.titre);
-        modal.find($('.modal-body')).html(reponse.contenu);
+        success: function(reponse, code) {
+            var modal = $('#modal-action');
 
-        $('#modal-action').modal();
-        $('.modal-backdrop').appendTo('#ecran');
-        $('body').removeClass();
+            try {
+                repJSON = JSON.parse(reponse);
+                modal.find($('.modal-title')).html(repJSON.titre);
+                modal.find($('.modal-body')).html(repJSON.contenu);
+            }
+            catch (e) {
+                modal.find($('.modal-body')).html("Error : " + reponse);
+            }
+
+            // Affichage du modal dans le div "ecran". http://stackoverflow.com/a/28386761
+            $('#modal-action').modal();
+            $('.modal-backdrop').appendTo('#ecran');
+            $('body').removeClass();
+        },
+
+        error: function(reponse, code) {
+            var modal = $('#modal-action');
+            modal.find($('.modal-body')).html("Error : " + code + ". " + reponse);
+
+            $('#modal-action').modal();
+            $('.modal-backdrop').appendTo('#ecran');
+            $('body').removeClass();
+        }
     });
 
-    // Affichage du modal dans le div "ecran"
-    //
-    // http://stackoverflow.com/a/28386761
-    //
+
 }
 
 function activer_drag_drop(draggables, containment, droppables) {

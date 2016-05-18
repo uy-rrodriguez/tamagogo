@@ -3,16 +3,16 @@
 abstract class BaseModel {
 
     public function __construct() {
-        echo "<pre>BaseModel()</pre>";
+        //echo "<pre>BaseModel()</pre>";
     }
 
     public function __set($att, $value) {
-        echo "<pre>". get_class($this) .": __set($att, $value)</pre>";
+        //echo "<pre>". get_class($this) .": __set($att, $value)</pre>";
         $this->$att = $value;
     }
 
     public function __get($att) {
-        echo "<pre>". get_class($this) .": __get($att)</pre>";
+        //echo "<pre>". get_class($this) .": __get($att)</pre>";
 
         if (property_exists(get_class($this), $att)) {
             return $this->$att;

@@ -1,10 +1,17 @@
 <?php
     include_once("bs/util.class.php");
+    include_once("model/nourriture.class.php");
 
     $elements = array();
     for ($i = 0; $i < 40 ; $i++) {
-        $color = Util::randColor();
-        $elements[] = "<a href='#' class='modal-item' style='background-color: $color;'></a>";
+        $e = new Nourriture();
+//         $e->color = $color;
+//         $e->id;
+//         $e->nom;
+//         $e->prix;
+//         $e->effets;
+        $e->img = "img/nourrir.png";
+        $elements[] = $e;
     }
 ?>
 
@@ -12,7 +19,11 @@
 
 <?php
     foreach ($elements as $e) {
-        echo $e;
+?>
+        <a href="#" class="modal-item" style="background-color: <?php echo Util::randColor(); ?>;">
+            <img src="<?php echo $e->img; ?>"></img>
+        </a>
+<?php
     }
 ?>
 

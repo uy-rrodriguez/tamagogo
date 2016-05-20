@@ -26,28 +26,28 @@
     <!-- ------------- BARRES AVEC LES ETATS ---------------------------------------------------- -->
 
 		<div id="stats">
-			<div class="stat haut draggable">
+			<div id="stat-sante" class="stat haut draggable">
 				<div class="barre">
 					<span class="couleur" style="width: 85%;"></span>
 					<span class="titre">Santé 85%</span>
 				</div>
 				<img src="img/sante.png">
 			</div>
-			<div class="stat haut draggable">
+			<div id="stat-bonheur" class="stat haut draggable">
 				<div class="barre">
 					<span class="couleur" style="width: 70%;"></span>
 					<span class="titre">Bonheur 70%</span>
 				</div>
 				<img src="img/bonheur.png">
 			</div>
-			<div class="stat moyen draggable">
+			<div id="stat-faim" class="stat moyen draggable">
 				<div class="barre">
 					<span class="couleur" style="width: 40%;"></span>
 					<span class="titre">Faim 40%</span>
 				</div>
 				<img src="img/faim.png">
 			</div>
-			<div class="stat bas draggable">
+			<div id="stat-maladie" class="stat bas draggable">
 				<div class="barre">
 					<span class="couleur" style="width: 10%;"></span>
 					<span class="titre">Maladie 10%</span>

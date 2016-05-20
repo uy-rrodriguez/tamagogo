@@ -222,11 +222,13 @@ div {
 
 /* Modal : Liste simple */
 .modal-liste-simple {
+    position: relative;
     height: 85%;
     overflow-y: auto;
 }
 
 .modal-liste-simple > a.modal-item {
+    position: relative;
     display: inline-block;
     width: 80px;
     height: 80px;
@@ -236,6 +238,27 @@ div {
 .modal-liste-simple > a.modal-item > img {
     width: 100%;
     height: 100%;
+}
+
+.modal-liste-simple .item-details {
+    position: absolute;
+    display: none;
+    min-width: 80px;
+    height: 100px;
+    padding: 2px 5px;
+    border: 1px solid #AAA;
+    border-radius: 5px;
+    background-color: #FFF;
+    box-shadow: 0px 0px 5px 2px #CCC;
+}
+
+.modal-liste-simple .item-details .item-nom {
+    font-weight: bold;
+}
+
+.modal-liste-simple .item-details ul {
+    margin-left: 15px;
+    padding-left: 0px;
 }
 
 

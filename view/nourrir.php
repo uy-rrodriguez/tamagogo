@@ -6,10 +6,10 @@
     for ($i = 0; $i < 40 ; $i++) {
         $e = new Nourriture();
 //         $e->color = $color;
-//         $e->id;
 //         $e->nom;
 //         $e->prix;
 //         $e->effets;
+        $e->id = $i;
         $e->img = "img/nourrir.png";
         $elements[] = $e;
     }
@@ -20,9 +20,18 @@
 <?php
     foreach ($elements as $e) {
 ?>
-        <a href="#" class="modal-item" style="background-color: <?php echo Util::randColor(); ?>;">
+        <a href="#" class="modal-item" id="<?php echo $e->id; ?>" style="background-color: <?php echo Util::randColor(); ?>;">
             <img src="<?php echo $e->img; ?>"></img>
         </a>
+        <div class="item-details" id="details-<?php echo $e->id; ?>">
+            <span class="item-nom"><?php echo $e->id; ?></span>
+            <ul>
+                <li>Santé +1</li>
+                <li>Bonheur +15</li>
+                <li>Faim -10</li>
+                <li>Maladie +1</li>
+            </ul>
+        </div>
 <?php
     }
 ?>
@@ -34,6 +43,11 @@
         <button type="button" class="btn btn-secondary" onclick="charger_modal('marche');">March&eacute;</button>
     </div>
     <div class="droite">
-        <button type="button" class="btn btn-primary">Nourrir</button>
+        <button type="button" class="btn btn-primary" onclick="nourrir();">Nourrir</button>
     </div>
 </div>
+
+<script>
+    /* Quand on clique sur un item d'une liste, on affiche un petit popup avec plus d'info. */
+    activer_items_selectables(".modal-liste-simple .modal-item", "details-");
+</script>

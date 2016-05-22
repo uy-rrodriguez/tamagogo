@@ -197,5 +197,22 @@ function nourrir() {
     }
 }
 
+function soigner() {
+    if (SESSION["elemSelected"] != null) {
+        // On cache le popup de l'élément sélectionné
+        $("#details-" + SESSION["elemSelected"].id).hide();
+
+        // On fait appel au controlleur
+        appel_ajax("soigner", function (reponse, code) {
+            // On supprime le médicament de la liste dans le modal
+            $("#" + SESSION["elemSelected"].id).remove();
+            SESSION["elemSelected"] = null;
+
+            // On actualise les barres d'état
+            actualiser_etat();
+        });
+    }
+}
+
 
 

@@ -13,6 +13,10 @@
         $e->img = "img/nourrir.png";
         $elements[] = $e;
     }
+
+    $n = new Nourriture();
+    $ns = $n->getAll();
+    var_dump($ns);
 ?>
 
 <div class="modal-liste-simple">

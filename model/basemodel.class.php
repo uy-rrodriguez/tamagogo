@@ -1,4 +1,5 @@
 <?php
+require_once("bs/dbconnection.class.php");
 
 abstract class BaseModel {
 
@@ -63,11 +64,23 @@ abstract class BaseModel {
 	}
 
     public function get($id) {
-        echo "<pre>". get_class($this) .": get($id)</pre>";
+        //echo "<pre>". get_class($this) .": get($id)</pre>";
     }
 
     public function getAll() {
-        echo "<pre>". get_class($this) .": getAll()</pre>";
+        try {
+            $conn = new ConnexionBD();
+            $sql = "SELECT * FROM " . strtolower(get_class($this));
+            $res = $conn->doQueryObject($sql, get_class($this));
+
+            if ($res === false || empty($res))
+                return null;
+
+            return $res[0];
+        }
+        catch(Exception $ex) {
+            echo "<h1>" . $ex->getMessage() . "</h1>";
+        }
     }
 }
 

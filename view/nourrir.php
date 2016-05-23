@@ -19,7 +19,16 @@
     var_dump($ns);
 ?>
 
-<div class="modal-liste-simple">
+
+<script>
+    $(function() {
+        /* Quand on clique sur un item d'une liste, on affiche un petit popup avec plus d'info. */
+        activer_items_selectables(".modal-liste-simple .modal-item", "details-");
+    });
+</script>
+
+
+<div class="modal-liste modal-liste-simple">
 
 <?php
     foreach ($elements as $e) {
@@ -50,8 +59,3 @@
         <button type="button" class="btn btn-primary" onclick="nourrir();">Nourrir</button>
     </div>
 </div>
-
-<script>
-    /* Quand on clique sur un item d'une liste, on affiche un petit popup avec plus d'info. */
-    activer_items_selectables(".modal-liste-simple .modal-item", "details-");
-</script>

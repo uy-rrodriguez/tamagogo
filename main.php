@@ -1,5 +1,10 @@
 <?php
+    session_start();
+    if (!isset($_SESSION["utilisateur"]))
+        exit();
+
     include_once("view/template/head.php");
+
 ?>
     <script>
         $(function() {
@@ -55,35 +60,42 @@
 
 		<div id="actions">
 			<div class="action draggable">
-				<div id="nourrir" class="bouton" data-title="Nourrir">
+				<div id="nourrir" class="bouton lancer-modal" data-title="Nourrir">
 					<img src="img/nourrir.png">
 				</div>
 <!-- 				<span class="titre">Nourrir</span> -->
 			</div>
 			<div class="action draggable">
-				<div id="jouer" class="bouton" data-title="Jouer">
+				<div id="jouer" class="bouton lancer-modal" data-title="Jouer">
 					<img src="img/jouer.png">
 				</div>
 <!-- 				<span class="titre">Jouer</span> -->
 			</div>
 			<div class="action draggable">
-				<div id="soigner" class="bouton" data-title="Soigner">
+				<div id="soigner" class="bouton lancer-modal" data-title="Soigner">
 					<img src="img/soigner.png">
 				</div>
 <!-- 				<span class="titre">Soigner</span> -->
 			</div>
 			<div class="action draggable">
-				<div id="habiller" class="bouton" data-title="Habiller">
+				<div id="habiller" class="bouton lancer-modal" data-title="Habiller">
 					<img src="img/habiller.png">
 				</div>
 <!-- 				<span class="titre">Habiller</span> -->
 			</div>
 			<div class="action draggable">
-				<div id="environnement" class="bouton" data-title="Environn.">
+				<div id="environnement" class="bouton lancer-modal" data-title="Environn.">
 					<img src="img/environnement.png">
 				</div>
 <!-- 				<span class="titre">Environnement</span> -->
 			</div>
+		</div>
+
+
+    <!-- ------------- BOUTON SORTIR ------------------------------------------------------------ -->
+
+		<div id="sortir" class="action draggable">
+			<div class="bouton" data-title="Sortir" onclick="logout();">x</div>
 		</div>
 
 

@@ -15,7 +15,7 @@
     }
 ?>
 
-<div class="modal-liste-simple">
+<div class="modal-liste modal-liste-simple">
 
 <?php
     foreach ($elements as $e) {

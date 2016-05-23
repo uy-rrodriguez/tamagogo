@@ -22,7 +22,7 @@
 </script>
 
 
-<div class="modal-liste-double">
+<div class="modal-liste modal-liste-double">
     <div id="liste-tama" class="gauche droppable">
 
 <?php

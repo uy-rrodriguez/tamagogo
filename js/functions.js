@@ -10,7 +10,7 @@ $(function() {
         }
     });
 
-    $( ".bouton" ).click(function () {
+    $( ".lancer-modal" ).click(function () {
         // Il faut vérifier que le bouton n'a pas été déplacé
         // https://blog.lysender.com/2010/04/jquery-draggable-prevent-click-event/
         //
@@ -20,7 +20,7 @@ $(function() {
             charger_modal(this.id)
     });
 
-    //charger_modal("nourrir");
+    charger_modal("marche");
 });
 
 
@@ -222,6 +222,14 @@ function login() {
             //document.location.href = "main.php";
         },
         $("#login").serialize()
+    );
+}
+
+function logout() {
+    appel_ajax("logout",
+        function (reponse) {
+            document.location.href = "index.php";
+        }
     );
 }
 

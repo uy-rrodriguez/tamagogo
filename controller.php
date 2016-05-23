@@ -4,6 +4,7 @@
     require_once("model/humanoide.class.php");
     require_once("model/monstre.class.php");
     require_once("model/utilisateur.class.php");
+    require_once("model/objetfactory.class.php");
 
 
     session_start();
@@ -16,12 +17,20 @@
             login();
             break;
 
+        case "logout":
+            logout();
+            break;
+
         case "get_mascotte":
             get_mascotte();
             break;
 
         case "actualiser_etat":
             actualiser_etat();
+            break;
+
+        case "marche":
+            marche();
             break;
 
         case "nourrir":
@@ -42,10 +51,6 @@
 
         case "jouer":
             echo get_contenu_modal("view/liste_jeux.php", "S&eacute;lectionner un jeu");
-            break;
-
-        case "marche":
-            echo get_contenu_modal("view/marche.php", "Bienvenu au march&eacute;");
             break;
     }
 
@@ -92,6 +97,16 @@
         }
     }
 
+    function logout() {
+        try {
+            session_destroy();
+            retourner_succes(array());
+        }
+        catch(Exception $ex) {
+            retourner_erreur($ex->getMessage());
+        }
+    }
+
     function test_stat(&$var) {
         $var = ($var + 1) % 100;
     }
@@ -116,6 +131,16 @@
                                    "bonheur" => $m->bonheur,
                                    "faim" => $m->faim,
                                    "maladie" => $m->pourcMaladie));
+        }
+        catch(Exception $ex) {
+            retourner_erreur($ex->getMessage());
+        }
+    }
+
+    function marche() {
+        try {
+            $_SESSION["objets_marche"] = ObjetFactory::genererObjetsDuMarche();
+            echo get_contenu_modal("view/marche.php", "Bienvenu au march&eacute;");
         }
         catch(Exception $ex) {
             retourner_erreur($ex->getMessage());

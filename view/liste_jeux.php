@@ -12,7 +12,7 @@
     }
 ?>
 
-<div class="modal-liste-jeux">
+<div class="modal-liste modal-liste-jeux">
     <div class="container">
 
 <?php

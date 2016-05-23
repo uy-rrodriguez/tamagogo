@@ -1,22 +1,38 @@
 <?php
 
-require_once("basemodel.class.php");
+require_once("model/basemodel.class.php");
+require_once("bs/dbconnection.class.php");
 
 class Utilisateur extends BaseModel {
 
-    private id;
-    private nom;
-    private mdp;
-    private email;
-    private argent;
-    private derniereConnexion;
+    /*
+    private $id;
+    private $nom;
+    private $motDePasse;
+    private $email;
+    private $argent;
+    private $derniereConnexion;
+    */
 
     public function __construct() {
-        echo "<pre>Utilisateur()</pre>";
+        //echo "<pre>Utilisateur()</pre>";
     }
 
-    public function controllerLogin($email, $mdp) {
-        echo "<pre>". get_class($this) .": controllerLogin($email, $mdp)</pre>";
+    public static function controllerLogin($email, $mdp) {
+        //echo "<pre>". get_class($this) .": controllerLogin($email, $mdp)</pre>";
+        try {
+            $conn = new ConnexionBD();
+            $sql = "SELECT * FROM utilisateur WHERE nom = '" . $_REQUEST["nom"] . "' AND motDePasse = '" . $_REQUEST["mdp"] . "'";
+            $res = $conn->doQueryObject($sql, "Utilisateur");
+
+            if ($res === false || empty($res))
+                return null;
+
+            return $res[0];
+        }
+        catch(Exception $ex) {
+            throw $ex;
+        }
     }
 }
 

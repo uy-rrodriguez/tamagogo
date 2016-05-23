@@ -3,6 +3,9 @@
     Pack d'icones:
         https://www.iconfinder.com/iconsets/thesquid-ink-40-free-flat-icon-pack
         https://www.iconfinder.com/iconsets/new-year-resolutions
+
+    Palette d'inspiration:
+        http://www.color-hex.com/color-palette/4216
 */
 
 body {
@@ -21,11 +24,115 @@ div {
     width: 800px;
     height: 600px;
     border: 2px solid gray;
-    background-image: url("../img/bg/bg_chambre2.jpg");
-    background-size: cover;
-
     overflow: hidden;
 }
+
+#ecran {
+    background: #BBB;
+}
+
+#ecran.main {
+    background-image: url("../img/bg/bg_chambre2.jpg");
+    background-size: cover;
+}
+
+
+/* *************************************************************************************************** */
+/*                  INDEX                                                                              */
+/* *************************************************************************************************** */
+
+#login {
+    /*
+    display: table-cell;
+
+    height: 100%;
+    vertical-align: middle;
+    */
+    width: 80%;
+    margin: 0 auto;
+    padding-top: 40px;
+}
+
+#login > #titre {
+    margin-bottom: 20px;
+    font-family: "Luckiest Guy";
+    text-align: center;
+    color: #1fa67b;
+}
+
+#login > #titre > span {
+}
+
+#login #titre-tama {
+    font-size: 40px;
+}
+
+#login #titre-gogo {
+    font-size: 50px;
+}
+
+#login > input[type=text], #login > input[type=password] {
+    display: inline-block;
+    width: 49%;
+    height: 50px;
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: #c50a2e;
+}
+
+#login > input[type=text] {
+    margin-right: 1%;
+}
+
+/*#login > a.button {*/
+#login > .bouton {
+    display: block;
+    margin: 0 auto 10px auto;
+    width: 100%;
+    height: 80px;
+
+    font-size: 24px;
+    font-weight: bold;
+    font-variant: small-caps;
+    letter-spacing: 2px;
+    text-align: center;
+    line-height: 80px;
+    vertical-aliign: middle;
+
+    background-color: white;
+    background-image:
+        linear-gradient(
+            center bottom,
+            rgb(43,194,83) 37%,
+            rgb(84,240,84) 69%
+        );
+    box-shadow:
+        inset 0 2px 9px  rgba(255,255,255,0.3),
+        inset 0 -2px 6px rgba(0,0,0,0.4);
+    border: none;
+    border-radius: 15px;
+}
+
+#login > #btn-login {
+    background-color: #337ab7;
+    color: white;
+}
+
+#login > #btn-inscription {
+    background-color: #EEEEEE;
+    color: #5F5F5F;
+}
+
+#login > a.bouton:hover, #login > a.bouton:focus {
+    cursor: pointer;
+    text-decoration: none;
+    opacity: 0.8;
+}
+
+#login > a.bouton:active {
+    color: red;
+}
+
 
 
 /* *************************************************************************************************** */
@@ -67,11 +174,13 @@ div {
 
 .stat > .barre > .titre {
     position: absolute;
-    display: block;
-    bottom: -12px;
-    left: 12px;
+    display: inline-block;
+    top: 0px;
+    margin: 0 auto;
     font-weight: bold;
     font-size: 10px;
+    line-height: 30px;
+    color: #333;
 }
 
 .stat > .barre > .couleur {
@@ -199,13 +308,22 @@ div {
 /* *************************************************************************************************** */
 
 /* Bootstrap */
+
+.modal-dialog {
+    margin-top: 60px;
+}
+
 /* Pour contenir le modal dans un autre div -> http://stackoverflow.com/a/28386761 */
 .modal-backdrop {
     position: absolute;
 }
 
-.modal-body {
+#ecran.main .modal-body {
     height: 400px;
+}
+
+#ecran.index .modal-body {
+    height: 470px;
 }
 
 .btn-secondary {

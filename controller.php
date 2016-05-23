@@ -1,8 +1,23 @@
 <?php
+    //require_once("bs/dbconnection.class.php");
+    require_once("model/utilisateur.class.php");
+    require_once("model/humanoide.class.php");
+
+
+    session_start();
+
 
     $action = $_REQUEST["action"];
 
     switch ($action) {
+        case "login":
+            login();
+            break;
+
+        case "get_etat":
+            get_etat();
+            break;
+
         case "nourrir":
             echo get_contenu_modal("view/nourrir.php", "Nourrir");
             break;
@@ -36,5 +51,57 @@
         ob_end_clean();
         return json_encode(array("contenu" => $contenu,
                                  "titre" => $titre));
+    }
+
+    function retourner_erreur($msg) {
+        echo json_encode(array("resultat" => "erreur",
+                               "error" => $msg));
+        exit();
+    }
+
+    function retourner_succes($attribs) {
+        $reponse = array("resultat" => "OK");
+        foreach($attribs as $cle => $valeur) {
+            $reponse[$cle] = $valeur;
+        }
+        echo json_encode($reponse);
+        exit();
+    }
+
+    function login() {
+        try {
+            $res = Utilisateur::controllerLogin($_REQUEST["nom"], $_REQUEST["mdp"]);
+            if ($res == null)
+                retourner_erreur("Nom ou mot de passe incorrect");
+            else {
+                $_SESSION["utilisateur"] = $res;
+                $_SESSION["mascotte"] = (new Humanoide())->getByUtilisateur($_SESSION["utilisateur"]->id);
+                retourner_succes(array("utilisateur" => $res));
+            }
+        }
+        catch(Exception $ex) {
+            retourner_erreur($ex->getMessage());
+        }
+    }
+
+    function test_stat(&$var) {
+        $var = ($var + 1) % 100;
+    }
+
+    function get_etat() {
+        try {
+            $m = $_SESSION["mascotte"];
+            test_stat($m->sante);
+            test_stat($m->bonheur);
+            test_stat($m->faim);
+            test_stat($m->pourcMaladie);
+            retourner_succes(array("sante" => $m->sante,
+                                   "bonheur" => $m->bonheur,
+                                   "faim" => $m->faim,
+                                   "maladie" => $m->pourcMaladie));
+        }
+        catch(Exception $ex) {
+            retourner_erreur($ex->getMessage());
+        }
     }
 ?>

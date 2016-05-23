@@ -15,7 +15,7 @@ abstract class BaseModel {
     public function __get($att) {
         //echo "<pre>". get_class($this) .": __get($att)</pre>";
 
-        if (property_exists(get_class($this), $att)) {
+        if (isset($this->$att)) {
             return $this->$att;
         }
         else {
@@ -65,6 +65,38 @@ abstract class BaseModel {
 
     public function get($id) {
         //echo "<pre>". get_class($this) .": get($id)</pre>";
+        try {
+            $conn = new ConnexionBD();
+            $sql = "SELECT * FROM " . strtolower(get_class($this)) . " WHERE id = " . $id;
+            $res = $conn->doQueryObject($sql, get_class($this));
+
+            if ($res === false || empty($res))
+                return null;
+
+            return $res[0];
+        }
+        catch(Exception $ex) {
+            //echo "<h1>" . $ex->getMessage() . "</h1>";
+            throw $ex;
+        }
+    }
+
+    public function getBy($attrib, $value) {
+        //echo "<pre>". get_class($this) .": get($id)</pre>";
+        try {
+            $conn = new ConnexionBD();
+            $sql = "SELECT * FROM " . strtolower(get_class($this)) . " WHERE $attrib = " . $value;
+            $res = $conn->doQueryObject($sql, get_class($this));
+
+            if ($res === false || empty($res))
+                return null;
+
+            return $res[0];
+        }
+        catch(Exception $ex) {
+            //echo "<h1>" . $ex->getMessage() . "</h1>";
+            throw $ex;
+        }
     }
 
     public function getAll() {
@@ -79,7 +111,8 @@ abstract class BaseModel {
             return $res[0];
         }
         catch(Exception $ex) {
-            echo "<h1>" . $ex->getMessage() . "</h1>";
+            //echo "<h1>" . $ex->getMessage() . "</h1>";
+            throw $ex;
         }
     }
 }

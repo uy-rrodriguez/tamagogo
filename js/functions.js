@@ -20,51 +20,28 @@ $(function() {
             charger_modal(this.id)
     });
 
-    charger_modal("nourrir");
+    //charger_modal("nourrir");
 });
 
 
+/* *************************************************************************************************** */
+/*                  ANIMATIONS ET EFFETS GUI                                                           */
+/* *************************************************************************************************** */
 
-/* Cette fonction va chercher via AJAX le contenu à afficher dans le modal
-   Le contenu dépendra de l'action réalisé par l'utilisateur.
-   Le controleur se charge de renvoyer le bon code.
-*/
-function charger_modal(nom_action) {
-    $.ajax({
-        url: "controller.php",
-        method: "post",
-        /*dataType: "json",*/
-        data: {action: nom_action},
+function afficher_modal(id, static = false) {
+    // Affichage du modal dans le div "ecran". http://stackoverflow.com/a/28386761
+    if (static) {
+        $(id).modal({
+            backdrop: "static",
+            keyboard: false
+        });
+    }
+    else {
+        $(id).modal();
+    }
 
-        success: function(reponse, code) {
-            var modal = $('#modal-action');
-
-            try {
-                repJSON = JSON.parse(reponse);
-                modal.find($('.modal-title')).html(repJSON.titre);
-                modal.find($('.modal-body')).html(repJSON.contenu);
-            }
-            catch (e) {
-                modal.find($('.modal-body')).html("Error : " + reponse);
-            }
-
-            // Affichage du modal dans le div "ecran". http://stackoverflow.com/a/28386761
-            $('#modal-action').modal();
-            $('.modal-backdrop').appendTo('#ecran');
-            $('body').removeClass();
-        },
-
-        error: function(reponse, code) {
-            var modal = $('#modal-action');
-            modal.find($('.modal-body')).html("Error : " + code + ". " + reponse);
-
-            $('#modal-action').modal();
-            $('.modal-backdrop').appendTo('#ecran');
-            $('body').removeClass();
-        }
-    });
-
-
+    $(".modal-backdrop").appendTo('#ecran');
+    $("body").removeClass();
 }
 
 function activer_items_selectables(selectables, basePopupID) {
@@ -131,32 +108,12 @@ function activer_drag_drop(draggables, containment, droppables) {
     });
 }
 
-
-/* Fonctions qui font appel a des actions du controlleur */
-function appel_ajax(action, onSuccess, onError = null) {
-    $.ajax({
-        url: "controller.php",
-        method: "post",
-        data: {action: action},
-
-        success: function(reponse, code) {
-            onSuccess(reponse, code);
-        },
-
-        error: function(reponse, code) {
-            if (onError != null)
-                onError(reponse, code);
-            else
-                alert("Error : " + code + ". " + reponse);
-        }
-    });
-}
-
 function changer_barre(id, valeur) {
     var stat = $("#" + id);
     stat.find(".barre .couleur").css({width: valeur + "%"});
+    stat.find(".titre").html(valeur + "%");
 
-    if (valeur < 20) {
+    if (valeur < 30) {
         stat.removeClass("haut moyen");
         stat.addClass("bas");
     }
@@ -170,14 +127,117 @@ function changer_barre(id, valeur) {
     }
 }
 
+
+
+/* *************************************************************************************************** */
+/*                  FONCTIONS UTILES AJAX                                                              */
+/* *************************************************************************************************** */
+
+/* Cette fonction va chercher via AJAX le contenu à afficher dans le modal
+   Le contenu dépendra de l'action réalisé par l'utilisateur.
+   Le controleur se charge de renvoyer le bon code.
+*/
+function charger_modal(nom_action) {
+    $.ajax({
+        url: "controller.php",
+        method: "post",
+        /*dataType: "json",*/
+        data: {action: nom_action},
+
+        success: function(reponse, code) {
+            var modal = $('#modal-action');
+
+            try {
+                repJSON = JSON.parse(reponse);
+                modal.find($('.modal-title')).html(repJSON.titre);
+                modal.find($('.modal-body')).html(repJSON.contenu);
+            }
+            catch (e) {
+                modal.find($('.modal-body')).html("Error : " + reponse);
+            }
+
+            afficher_modal("#modal-action");
+        },
+
+        error: function(reponse, code) {
+            var modal = $('#modal-action');
+            modal.find($('.modal-body')).html("Error : " + code + ". " + reponse);
+
+            afficher_modal("#modal-action");
+        }
+    });
+}
+
+/* Petit outil pour afficher une alerte ou faire appel à une autre fonction qui traitera l'erreur. */
+function retourner_erreur(message, callback) {
+    if (callback != null)
+        callback(message);
+    else
+        alert("Error : " + message);
+}
+
+/* Cette fonction exécute via AJAX une action du contrôleur et renvoie la réponse en format JSON à la fonction
+   de callback onSuccess.
+   onError est une fonction qui peut être définie pour traiter les cas d'erreur.
+   data est utilisé dans le cas d'envoie de formulaires ou d'informations extras au contrôleur.
+*/
+function appel_ajax(action, onSuccess, onError = null, data = "null") {
+    $.ajax({
+        url: "controller.php?action=" + action + "&" + data,
+        method: "post",
+
+        success: function(reponse, code) {
+            try {
+                repJSON = JSON.parse(reponse);
+
+                if (repJSON.resultat == "OK")
+                    onSuccess(repJSON);
+                else
+                    retourner_erreur(repJSON.error, onError);
+            }
+            catch (e) {
+                retourner_erreur(reponse, onError);
+            }
+        },
+
+        error: function(reponse, code) {
+            retourner_erreur(code + " => " + reponse, onError);
+        }
+    });
+}
+
+
+
+/* *************************************************************************************************** */
+/*                  ACTIONS IMPORTANTES DU CONTRÔLEUR                                                  */
+/* *************************************************************************************************** */
+
+function login() {
+    appel_ajax("login",
+        function (reponse) {
+            document.location.href = "main.php";
+        },
+        function (msgError) {
+            alert(msgError);
+            //document.location.href = "main.php";
+        },
+        $("#login").serialize()
+    );
+}
+
 function actualiser_etat() {
-    appel_ajax("get_etat", function (reponse, code) {
-        //repJSON = JSON.parse(reponse);
-        changer_barre("stat-sante", 15);
-        changer_barre("stat-bonheur", 100);
-        changer_barre("stat-faim", 80);
-        changer_barre("stat-maladie", 50);
-    })
+    appel_ajax("get_etat",
+        function (reponse) {
+            changer_barre("stat-sante", reponse.sante);
+            changer_barre("stat-bonheur", reponse.bonheur);
+            changer_barre("stat-faim", reponse.faim);
+            changer_barre("stat-maladie", reponse.maladie);
+        }
+    );
+}
+
+function cron_actualiser_etat(temps) {
+    setInterval(actualiser_etat, temps);
 }
 
 function nourrir() {

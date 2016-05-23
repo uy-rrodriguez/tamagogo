@@ -44,7 +44,7 @@ class ConnexionBD
   public function doQueryObject($sql,$className) {
     $prepared = $this->link->prepare($sql);
     $prepared->execute();
-    $res = $prepared->fetchAll(PDO::FETCH_CLASS, $className);
+    $res = $prepared->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $className);
 
     return $res;
   }

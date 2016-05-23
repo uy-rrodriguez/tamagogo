@@ -225,8 +225,16 @@ function login() {
     );
 }
 
+function get_mascotte() {
+    appel_ajax("get_mascotte",
+        function (reponse) {
+            $("#tama").addClass(reponse.mascotte.classe.toLowerCase());
+        }
+    );
+}
+
 function actualiser_etat() {
-    appel_ajax("get_etat",
+    appel_ajax("actualiser_etat",
         function (reponse) {
             changer_barre("stat-sante", reponse.sante);
             changer_barre("stat-bonheur", reponse.bonheur);

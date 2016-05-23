@@ -3,7 +3,7 @@
 ?>
     <script>
         $(function() {
-            //actualiser_etat();
+            get_mascotte();
             cron_actualiser_etat(1000);
         });
     </script>
@@ -13,7 +13,7 @@
     <!-- ------------- IMAGE DU TAMA ACTUEL ----------------------------------------------------- -->
 
 		<div id="tama" class="draggable">
-			<img src="img/tamas/nicolas.png">
+			<!--<img src="img/tamas/nicolas.png">-->
 		</div>
 
 

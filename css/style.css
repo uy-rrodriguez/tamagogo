@@ -6,7 +6,48 @@
 
     Palette d'inspiration:
         http://www.color-hex.com/color-palette/4216
+
+    Polices:
+        https://fonts.googleapis.com/css?family=Oxygen:400,700
+        https://fonts.googleapis.com/css?family=Luckiest+Guy
 */
+
+
+/* *************************************************************************************************** */
+/*                  POLICES                                                                            */
+/* *************************************************************************************************** */
+
+/* Luckiest Guy, latin */
+@font-face {
+  font-family: 'Luckiest Guy';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Luckiest Guy'), local('LuckiestGuy-Regular'), url(luckiestguy-v6.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+/* Oxygen, latin-ext */
+@font-face {
+  font-family: 'Oxygen';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Oxygen'), local('Oxygen-Regular'), url(Oxygen-v5-normal-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Oxygen, latin-ext */
+@font-face {
+  font-family: 'Oxygen';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Oxygen Bold'), local('Oxygen-Bold'), url(Oxygen-v5-bold-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+
+
+
+/* *************************************************************************************************** */
+/*                  TEMPLATE                                                                           */
+/* *************************************************************************************************** */
 
 body {
     font-family: 'Oxygen', sans-serif;
@@ -57,7 +98,7 @@ div {
     margin-bottom: 20px;
     font-family: "Luckiest Guy";
     text-align: center;
-    color: #1fa67b;
+    color: #c50a2e;;
 }
 
 #login > #titre > span {
@@ -292,15 +333,35 @@ div {
     bottom: 20px;
     left: 50%;
     margin-left: -200px;
-    width: 100px;
-    height: 200px;
 }
 
+#tama.humanoide {
+    width: 98px;
+    height: 200px;
+    background: url("../img/tamas/nicolas.png") center center no-repeat;
+    background-size: cover;
+}
+
+#tama.monstre {
+    width: 180px;
+    height: 200px;
+    background: url("../img/tamas/lapin.png") center center no-repeat;
+    background-size: cover;
+}
+
+#tama.animal {
+    width: 180px;
+    height: 220px;
+    background: url("../img/tamas/cheshire.png") center center no-repeat;
+    background-size: cover;
+}
+
+/*
 #tama > img {
     width: auto;
     height: 100%;
 }
-
+*/
 
 
 /* *************************************************************************************************** */

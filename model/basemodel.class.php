@@ -1,5 +1,5 @@
 <?php
-require_once("bs/dbconnection.class.php");
+require_once("bs/connexionbd.class.php");
 
 abstract class BaseModel {
 

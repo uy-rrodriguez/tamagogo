@@ -1,5 +1,5 @@
 <?php
-    require_once("dbconnection.class.php");
+    require_once("connexionbd.class.php");
 
     try {
         echo "Connexion. <br/>";
@@ -29,7 +29,9 @@
 
         echo "> Utilisateur. <br/>";
         $sql = "INSERT INTO utilisateur (id, nom, motDePasse, email, argent, derniereConnexion)
-                VALUES (1, 'pepito', '1', 'uyric.gm@gmail.com', 1200, 0);";
+                VALUES (1, 'pepito', '1', 'uyric.gm@gmail.com', 1200, 0),
+                        (2, 'pepito2', '2', 'uyric.gm@gmail.com', 2000, 0),
+                        (3, 'pepito3', '3', 'uyric.gm@gmail.com', 500, 0);";
         $conn->doExec($sql);
 
         echo "> Maladie. <br/>";
@@ -49,9 +51,11 @@
         $conn->doExec($sql);
 
         echo "> Mascotte. <br/>";
-        $sql = "INSERT INTO mascotte (id, id_utilisateur, id_maladie, id_envPrefere, id_envActuel, nom,
+        $sql = "INSERT INTO mascotte (id, classe, id_utilisateur, id_maladie, id_envPrefere, id_envActuel, nom,
                                         isMale, age, bonheur, faim, sante, pourcMaladie)
-                VALUES (1, 1, NULL, 2, 1, 'Nicol', true, 21, 40, 60, 70, 30);";
+                VALUES (1, 'Humanoide', 1, NULL, 2, 1, 'Nicol', true, 21, 40, 60, 70, 30),
+                        (2, 'Animal', 2, NULL, 2, 1, 'Cheshire', true, 5, 0, 0, 0, 0),
+                        (3, 'Monstre', 3, NULL, 2, 1, 'El Conejo Loco', true, 5, 100, 50, 80, 2);";
         $conn->doExec($sql);
 
         echo "> Environnements debloques. <br/>";
@@ -63,7 +67,7 @@
         $sql = "INSERT INTO humanoide (id) VALUES (1);";
         $conn->doExec($sql);
 
-        /*
+
         echo "> Animal. <br/>";
         $sql = "INSERT INTO animal (id) VALUES (2);";
         $conn->doExec($sql);
@@ -72,7 +76,7 @@
         $sql = "INSERT INTO monstre (id) VALUES (3);";
         $conn->doExec($sql);
 
-
+        /*
         echo "> Objet. <br/>";
         $sql = "INSERT INTO objet (id, id_utilisateur, nom, prix, img)
                 VALUES (1, 1, 'Hamburgeur');";

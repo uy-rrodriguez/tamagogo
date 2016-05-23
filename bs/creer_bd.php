@@ -1,5 +1,5 @@
 <?php
-    require_once("dbconnection.class.php");
+    require_once("connexionbd.class.php");
 
     try {
         echo "Connexion. <br/>";
@@ -52,6 +52,7 @@
 
         echo "> Mascotte. <br/>";
         $sql = "CREATE TABLE mascotte (id INTEGER PRIMARY KEY,
+                                        classe VARCHAR(10),
                                         id_utilisateur INTEGER,
                                         id_maladie INTEGER DEFAULT NULL,
                                         id_envPrefere INTEGER,

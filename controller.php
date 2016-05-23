@@ -1,7 +1,9 @@
 <?php
     //require_once("bs/dbconnection.class.php");
-    require_once("model/utilisateur.class.php");
+    require_once("model/animal.class.php");
     require_once("model/humanoide.class.php");
+    require_once("model/monstre.class.php");
+    require_once("model/utilisateur.class.php");
 
 
     session_start();
@@ -14,8 +16,12 @@
             login();
             break;
 
-        case "get_etat":
-            get_etat();
+        case "get_mascotte":
+            get_mascotte();
+            break;
+
+        case "actualiser_etat":
+            actualiser_etat();
             break;
 
         case "nourrir":
@@ -74,9 +80,11 @@
             if ($res == null)
                 retourner_erreur("Nom ou mot de passe incorrect");
             else {
+                $classe = Mascotte::getClasseByUtilisateur($res->id);
+                $_SESSION["mascotte"] = (new $classe())->getByUtilisateur($res->id);
                 $_SESSION["utilisateur"] = $res;
-                $_SESSION["mascotte"] = (new Humanoide())->getByUtilisateur($_SESSION["utilisateur"]->id);
-                retourner_succes(array("utilisateur" => $res));
+                retourner_succes(array("utilisateur" => $res,
+                                       "mascotte" => $_SESSION["mascotte"]));
             }
         }
         catch(Exception $ex) {
@@ -88,7 +96,16 @@
         $var = ($var + 1) % 100;
     }
 
-    function get_etat() {
+    function get_mascotte() {
+        try {
+            retourner_succes(array("mascotte" => $_SESSION["mascotte"]));
+        }
+        catch(Exception $ex) {
+            retourner_erreur($ex->getMessage());
+        }
+    }
+
+    function actualiser_etat() {
         try {
             $m = $_SESSION["mascotte"];
             test_stat($m->sante);

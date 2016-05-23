@@ -80,6 +80,23 @@ abstract class Mascotte extends BaseModel {
             throw $ex;
         }
     }
+
+    public static function getClasseByUtilisateur($idUtilisateur) {
+        try {
+            $conn = new ConnexionBD();
+            $sql = "SELECT classe FROM mascotte
+                    WHERE id_utilisateur = " . $idUtilisateur;
+            $res = $conn->doQuery($sql);
+
+            if ($res === false || empty($res))
+                return null;
+
+            return $res[0]["classe"];
+        }
+        catch(Exception $ex) {
+            throw $ex;
+        }
+    }
 }
 
 ?>

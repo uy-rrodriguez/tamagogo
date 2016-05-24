@@ -1,9 +1,16 @@
 <?php
 
+/*
 define ('HOST', 'localhost') ;
 define ('USER', 'root'  ) ;
 define ('PASS', '' ) ;
-define ('DB', 'tamagogo' ) ;
+define ('DB', 'etd' ) ;
+*/
+
+define ('HOST', 'pedago02a.univ-avignon.fr') ;
+define ('USER', 'uapv1602799'  ) ;
+define ('PASS', 'cFHJEJ' ) ;
+define ('DB', 'etd' ) ;
 
 class ConnexionBD
 {
@@ -15,7 +22,11 @@ class ConnexionBD
     $this->error = null;
     try {
         //$this->link = new PDO( "pgsql:host=" . HOST . ";dbname=" . DB . ";user=" . USER . ";password=" . PASS );
-        $this->link = new PDO( "mysql:host=" . HOST . ";dbname=" . DB, USER, PASS);
+        //$this->link = new PDO( "mysql:host=" . HOST . ";dbname=" . DB, USER, PASS );
+
+        // Connexion par PDO
+        //$this->link = new PDO( "sqlite:tamagogo.db" );
+        $this->link = new PDO( "pgsql:host=" . HOST . ";dbname=" . DB . ";user=" . USER . ";password=" . PASS );
         $this->link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 	catch( PDOException $e ) {

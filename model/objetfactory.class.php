@@ -12,15 +12,36 @@ class ObjetFactory {
         $classes = array("Decoration", "Vetement", "Medicament", "Nourriture");
         $objets = array();
 
-        for ($i = 0; $i < 40; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $cls = $classes[rand(0, 3)];
 
             $obj = new $cls();
             $obj->id = $i;
-            $obj->nom = "Lalala";
-            $obj->prix = 150;
+            $obj->prix = rand(5, 100) * 10;
             $obj->effets = array();
-            $obj->img = "img/faim.png";
+
+            switch ($cls) {
+                case "Decoration":
+                    $obj->nom = "Décoration";
+                    $obj->img = "img/decoration.png";
+                    break;
+
+                case "Vetement":
+                    $obj->nom = "Vêtement";
+                    $obj->img = "img/habiller.png";
+                    break;
+
+                case "Medicament":
+                    $obj->nom = "Médicament";
+                    $obj->img = "img/soigner.png";
+                    break;
+
+                case "Nourriture":
+                    $obj->nom = "Nourriture";
+                    $obj->img = "img/nourriture.png";
+                    break;
+            }
+
 
             $objets[] = $obj;
         }

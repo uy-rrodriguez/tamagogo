@@ -6,24 +6,23 @@
         $conn = new ConnexionBD();
 
         echo "Drop tables. <br/>";
-        $sql = "DROP TABLE IF EXISTS jeu;
-                DROP TABLE IF EXISTS effet_environnement;
-                DROP TABLE IF EXISTS effet_objet;
-                DROP TABLE IF EXISTS effet;
-                DROP TABLE IF EXISTS nourriture;
-                DROP TABLE IF EXISTS medicament;
-                DROP TABLE IF EXISTS vetement;
-                DROP TABLE IF EXISTS decoration;
-                DROP TABLE IF EXISTS objet;
-                DROP TABLE IF EXISTS monstre;
-                DROP TABLE IF EXISTS animal;
-                DROP TABLE IF EXISTS humanoide;
-                DROP TABLE IF EXISTS env_debloques;
-                DROP TABLE IF EXISTS mascotte;
-                DROP TABLE IF EXISTS environnement;
-                DROP TABLE IF EXISTS maladie;
-                DROP TABLE IF EXISTS utilisateur;";
-        $conn->doExec($sql);
+        $conn->doExec("DROP TABLE IF EXISTS jeu;");
+        $conn->doExec("DROP TABLE IF EXISTS effet_environnement;");
+        $conn->doExec("DROP TABLE IF EXISTS effet_objet;");
+        $conn->doExec("DROP TABLE IF EXISTS effet;");
+        $conn->doExec("DROP TABLE IF EXISTS nourriture;");
+        $conn->doExec("DROP TABLE IF EXISTS medicament;");
+        $conn->doExec("DROP TABLE IF EXISTS vetement;");
+        $conn->doExec("DROP TABLE IF EXISTS decoration;");
+        $conn->doExec("DROP TABLE IF EXISTS objet;");
+        $conn->doExec("DROP TABLE IF EXISTS monstre;");
+        $conn->doExec("DROP TABLE IF EXISTS animal;");
+        $conn->doExec("DROP TABLE IF EXISTS humanoide;");
+        $conn->doExec("DROP TABLE IF EXISTS env_debloques;");
+        $conn->doExec("DROP TABLE IF EXISTS mascotte;");
+        $conn->doExec("DROP TABLE IF EXISTS environnement;");
+        $conn->doExec("DROP TABLE IF EXISTS maladie;");
+        $conn->doExec("DROP TABLE IF EXISTS utilisateur;");
 
         echo "Creation tables. <br/>";
 

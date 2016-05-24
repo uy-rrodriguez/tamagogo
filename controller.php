@@ -126,11 +126,11 @@
             test_stat($m->sante);
             test_stat($m->bonheur);
             test_stat($m->faim);
-            test_stat($m->pourcMaladie);
+            test_stat($m->pourcmaladie);
             retourner_succes(array("sante" => $m->sante,
                                    "bonheur" => $m->bonheur,
                                    "faim" => $m->faim,
-                                   "maladie" => $m->pourcMaladie));
+                                   "maladie" => $m->pourcmaladie));
         }
         catch(Exception $ex) {
             retourner_erreur($ex->getMessage());

@@ -23,7 +23,7 @@
 <?php
         foreach ($elements as $e) {
 ?>
-            <a href='#' class='modal-item' id="<?php echo $e->id; ?>" style='background-color: <?php Util::randColor(); ?>;'>
+            <a href='#' class='modal-item' id="<?php echo $e->id; ?>" style="background-color: <?php Util::randColor(); ?>;">
                 <div class="marche-entete">
                     <span class="marche-nom"><?php echo $e->nom; ?></span>
                 </div>

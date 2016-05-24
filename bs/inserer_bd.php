@@ -6,24 +6,23 @@
         $conn = new ConnexionBD();
 
         echo "Purge tables. <br/>";
-        $sql = "DELETE FROM jeu;
-                DELETE FROM effet_environnement;
-                DELETE FROM effet_objet;
-                DELETE FROM effet;
-                DELETE FROM nourriture;
-                DELETE FROM medicament;
-                DELETE FROM vetement;
-                DELETE FROM decoration;
-                DELETE FROM objet;
-                DELETE FROM monstre;
-                DELETE FROM animal;
-                DELETE FROM humanoide;
-                DELETE FROM env_debloques;
-                DELETE FROM mascotte;
-                DELETE FROM environnement;
-                DELETE FROM maladie;
-                DELETE FROM utilisateur;";
-        $conn->doExec($sql);
+        $conn->doExec("DELETE FROM jeu;");
+        $conn->doExec("DELETE FROM effet_environnement;");
+        $conn->doExec("DELETE FROM effet_objet;");
+        $conn->doExec("DELETE FROM effet;");
+        $conn->doExec("DELETE FROM nourriture;");
+        $conn->doExec("DELETE FROM medicament;");
+        $conn->doExec("DELETE FROM vetement;");
+        $conn->doExec("DELETE FROM decoration;");
+        $conn->doExec("DELETE FROM objet;");
+        $conn->doExec("DELETE FROM monstre;");
+        $conn->doExec("DELETE FROM animal;");
+        $conn->doExec("DELETE FROM humanoide;");
+        $conn->doExec("DELETE FROM env_debloques;");
+        $conn->doExec("DELETE FROM mascotte;");
+        $conn->doExec("DELETE FROM environnement;");
+        $conn->doExec("DELETE FROM maladie;");
+        $conn->doExec("DELETE FROM utilisateur;");
 
         echo "Insertion dans les tables. <br/>";
 

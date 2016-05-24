@@ -2,10 +2,22 @@
     include_once("view/template/head.php");
 ?>
 
+    <script>
+        $(function() {
+            afficher_modal("#index-accueil", true);
+
+            $("input").keypress(function(event){
+                var keycode = (event.keyCode ? event.keyCode : event.which);
+                if (keycode == 13)
+                    login();
+            });
+        });
+    </script>
+
     <div id="ecran" class="index">
 
-        <!--<div id="index-accue2il" class="modal fade" role="dialog">-->
-        <div id="index-accue2il" role="dialog">
+        <div id="index-accueil" class="modal fade" role="dialog">
+        <!--<div id="index-accueil" role="dialog">-->
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -23,8 +35,8 @@
                             <input type="button" id="btn-inscription" class="bouton" value="Inscription" />
                             -->
 
-                            <a class="bouton" id="btn-login" onclick="login();"><div>Login</div></a>
-                            <a class="bouton" id="btn-inscription"><div>Inscription</div></a>
+                            <a href="#" class="bouton" id="btn-login" onclick="login();"><div>Login</div></a>
+                            <a href="#" class="bouton" id="btn-inscription"><div>Inscription</div></a>
                         <form>
 
                     </div>
@@ -33,12 +45,6 @@
         </div><!-- /.modal -->
 
     </div><!-- /.ecran .main-->
-
-
-    <script>
-        afficher_modal("#index-accueil", true);
-
-    </script>
 
 <?php
     include_once("view/template/foot.php");

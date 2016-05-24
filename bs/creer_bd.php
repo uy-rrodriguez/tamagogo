@@ -27,46 +27,46 @@
         echo "Creation tables. <br/>";
 
         echo "> Utilisateur. <br/>";
-        $sql = "CREATE TABLE utilisateur (id INTEGER PRIMARY KEY,
+        $sql = "CREATE TABLE utilisateur (id INTEGER PRIMARY KEY AUTO_INCREMENT,
                                             nom VARCHAR(20),
-                                            motDePasse VARCHAR(50),
+                                            mot_de_passe VARCHAR(50),
                                             email VARCHAR(50),
                                             argent INTEGER,
-                                            derniereConnexion INTEGER);";
+                                            derniere_connexion INTEGER);";
         $conn->doExec($sql);
 
         echo "> Maladie. <br/>";
-        $sql = "CREATE TABLE maladie (id INTEGER PRIMARY KEY,
+        $sql = "CREATE TABLE maladie (id INTEGER PRIMARY KEY AUTO_INCREMENT,
                                         nom VARCHAR(50),
                                         coef INTEGER,
-                                        pourcInitial INTEGER,
+                                        pourc_initial INTEGER,
                                         description TEXT);";
         $conn->doExec($sql);
 
         echo "> Environnement. <br/>";
-        $sql = "CREATE TABLE environnement (id INTEGER PRIMARY KEY,
+        $sql = "CREATE TABLE environnement (id INTEGER PRIMARY KEY AUTO_INCREMENT,
                                             nom VARCHAR(50),
                                             prix INTEGER);";
         $conn->doExec($sql);
 
         echo "> Mascotte. <br/>";
-        $sql = "CREATE TABLE mascotte (id INTEGER PRIMARY KEY,
+        $sql = "CREATE TABLE mascotte (id INTEGER PRIMARY KEY AUTO_INCREMENT,
                                         classe VARCHAR(10),
                                         id_utilisateur INTEGER,
                                         id_maladie INTEGER DEFAULT NULL,
-                                        id_envPrefere INTEGER,
-                                        id_envActuel INTEGER,
+                                        id_env_prefere INTEGER,
+                                        id_env_actuel INTEGER,
                                         nom VARCHAR(20),
-                                        isMale BOOLEAN,
+                                        is_male BOOLEAN,
                                         age INTEGER,
                                         bonheur INTEGER,
                                         faim INTEGER,
                                         sante INTEGER,
-                                        pourcMaladie INTEGER,
+                                        pourc_maladie INTEGER,
                                         FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id),
                                         FOREIGN KEY (id_maladie) REFERENCES maladie(id),
-                                        FOREIGN KEY (id_envPrefere) REFERENCES environnement(id),
-                                        FOREIGN KEY (id_envActuel) REFERENCES environnement(id));";
+                                        FOREIGN KEY (id_env_prefere) REFERENCES environnement(id),
+                                        FOREIGN KEY (id_env_actuel) REFERENCES environnement(id));";
         $conn->doExec($sql);
 
         echo "> Environnements debloques. <br/>";
@@ -92,7 +92,7 @@
         $conn->doExec($sql);
 
         echo "> Objet. <br/>";
-        $sql = "CREATE TABLE objet (id INTEGER PRIMARY KEY,
+        $sql = "CREATE TABLE objet (id INTEGER PRIMARY KEY AUTO_INCREMENT,
                                     id_utilisateur INTEGER DEFAULT NULL,
                                     nom VARCHAR(20),
                                     prix INTEGER,
@@ -125,7 +125,7 @@
         $conn->doExec($sql);
 
         echo "> Effet. <br/>";
-        $sql = "CREATE TABLE effet (id INTEGER PRIMARY KEY,
+        $sql = "CREATE TABLE effet (id INTEGER PRIMARY KEY AUTO_INCREMENT,
                                     attribut VARCHAR(10),
                                     coef INTEGER);";
         $conn->doExec($sql);
@@ -147,7 +147,7 @@
         $conn->doExec($sql);
 
         echo "> Jeu. <br/>";
-        $sql = "CREATE TABLE jeu (id INTEGER PRIMARY KEY,
+        $sql = "CREATE TABLE jeu (id INTEGER PRIMARY KEY AUTO_INCREMENT,
                                     nom VARCHAR(50),
                                     cout INTEGER,
                                     gain INTEGER,

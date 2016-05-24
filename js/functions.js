@@ -20,7 +20,7 @@ $(function() {
             charger_modal(this.id)
     });
 
-    charger_modal("marche");
+    //charger_modal("nourrir");
 });
 
 
@@ -133,6 +133,15 @@ function changer_barre(id, valeur) {
 /*                  FONCTIONS UTILES AJAX                                                              */
 /* *************************************************************************************************** */
 
+/* Affichage d'une image pendant qu'on attend une reponse */
+function afficher_attente(selector) {
+    //$(selector).toggleClass("loading");
+}
+
+function cacher_attente(selector) {
+    //$(selector).toggleClass("loading");
+}
+
 /* Cette fonction va chercher via AJAX le contenu à afficher dans le modal
    Le contenu dépendra de l'action réalisé par l'utilisateur.
    Le controleur se charge de renvoyer le bon code.
@@ -182,11 +191,15 @@ function retourner_erreur(message, callback) {
    data est utilisé dans le cas d'envoie de formulaires ou d'informations extras au contrôleur.
 */
 function appel_ajax(action, onSuccess, onError = null, data = "null") {
+    afficher_attente(".modal-content");
+
     $.ajax({
         url: "controller.php?action=" + action + "&" + data,
         method: "post",
 
         success: function(reponse, code) {
+            cacher_attente(".modal-content");
+
             try {
                 repJSON = JSON.parse(reponse);
 
@@ -201,6 +214,7 @@ function appel_ajax(action, onSuccess, onError = null, data = "null") {
         },
 
         error: function(reponse, code) {
+            cacher_attente(".modal-content");
             retourner_erreur(code + " => " + reponse, onError);
         }
     });
@@ -262,14 +276,18 @@ function nourrir() {
         $("#details-" + SESSION["elemSelected"].id).hide();
 
         // On fait appel au controlleur
-        appel_ajax("nourrir", function (reponse, code) {
-            // On supprime la nourriture de la liste dans le modal
-            $("#" + SESSION["elemSelected"].id).remove();
-            SESSION["elemSelected"] = null;
+        appel_ajax("nourrir",
+            function (reponse, code) {
+                // On supprime la nourriture de la liste dans le modal
+                $("#" + SESSION["elemSelected"].id).remove();
+                SESSION["elemSelected"] = null;
 
-            // On actualise les barres d'état
-            actualiser_etat();
-        });
+                // On actualise les barres d'état
+                actualiser_etat();
+            },
+            null,
+            "id_objet=" + SESSION["elemSelected"].id
+        );
     }
 }
 
@@ -279,14 +297,36 @@ function soigner() {
         $("#details-" + SESSION["elemSelected"].id).hide();
 
         // On fait appel au controlleur
-        appel_ajax("soigner", function (reponse, code) {
-            // On supprime le médicament de la liste dans le modal
-            $("#" + SESSION["elemSelected"].id).remove();
-            SESSION["elemSelected"] = null;
+        appel_ajax("soigner",
+            function (reponse, code) {
+                // On supprime le médicament de la liste dans le modal
+                $("#" + SESSION["elemSelected"].id).remove();
+                SESSION["elemSelected"] = null;
 
-            // On actualise les barres d'état
-            actualiser_etat();
-        });
+                // On actualise les barres d'état
+                actualiser_etat();
+            },
+            null,
+            "id_objet=" + SESSION["elemSelected"].id
+        );
+    }
+}
+
+function acheter() {
+    if (SESSION["elemSelected"] != null) {
+        // On cache le popup de l'élément sélectionné
+        $("#details-" + SESSION["elemSelected"].id).hide();
+
+        // On fait appel au controlleur
+        appel_ajax("acheter",
+            function (reponse, code) {
+                // On supprime l'objet de la liste dans le modal
+                $("#" + SESSION["elemSelected"].id).remove();
+                SESSION["elemSelected"] = null;
+            },
+            null,
+            "id_objet=" + SESSION["elemSelected"].id
+        );
     }
 }
 

@@ -27,14 +27,14 @@
         echo "Insertion dans les tables. <br/>";
 
         echo "> Utilisateur. <br/>";
-        $sql = "INSERT INTO utilisateur (id, nom, motDePasse, email, argent, derniereConnexion)
+        $sql = "INSERT INTO utilisateur (id, nom, mot_de_passe, email, argent, derniere_connexion)
                 VALUES (1, 'pepito', '1', 'uyric.gm@gmail.com', 1200, 0),
                         (2, 'pepito2', '2', 'uyric.gm@gmail.com', 2000, 0),
                         (3, 'pepito3', '3', 'uyric.gm@gmail.com', 500, 0);";
         $conn->doExec($sql);
 
         echo "> Maladie. <br/>";
-        $sql = "INSERT INTO maladie (id, nom, coef, pourcInitial, description)
+        $sql = "INSERT INTO maladie (id, nom, coef, pourc_initial, description)
                 VALUES (1, 'Grippe', 5, 70, 'Une grippe commune'),
                        (2, 'Sida', 15, 80, 'Une maladie difficile à soigner'),
                        (3, 'Ver assassin', 20, 50, 'Un verre alien qui bouffe la cervelle en moins de trois heures !'),
@@ -50,8 +50,8 @@
         $conn->doExec($sql);
 
         echo "> Mascotte. <br/>";
-        $sql = "INSERT INTO mascotte (id, classe, id_utilisateur, id_maladie, id_envPrefere, id_envActuel, nom,
-                                        isMale, age, bonheur, faim, sante, pourcMaladie)
+        $sql = "INSERT INTO mascotte (id, classe, id_utilisateur, id_maladie, id_env_prefere, id_env_actuel, nom,
+                                        is_male, age, bonheur, faim, sante, pourc_maladie)
                 VALUES (1, 'Humanoide', 1, NULL, 2, 1, 'Nicol', true, 21, 40, 60, 70, 30),
                         (2, 'Animal', 2, NULL, 2, 1, 'Cheshire', true, 5, 0, 0, 0, 0),
                         (3, 'Monstre', 3, NULL, 2, 1, 'El Conejo Loco', true, 5, 100, 50, 80, 2);";

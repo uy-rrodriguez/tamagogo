@@ -1,16 +1,18 @@
 <?php
 
-/*
+
 define ('HOST', 'localhost') ;
 define ('USER', 'root'  ) ;
 define ('PASS', '' ) ;
-define ('DB', 'etd' ) ;
-*/
+define ('DB', 'tamagogo' ) ;
 
+
+/*
 define ('HOST', 'pedago02a.univ-avignon.fr') ;
 define ('USER', 'uapv1602799'  ) ;
 define ('PASS', 'cFHJEJ' ) ;
 define ('DB', 'etd' ) ;
+*/
 
 class ConnexionBD
 {
@@ -21,12 +23,11 @@ class ConnexionBD
     $this->link = null;
     $this->error = null;
     try {
-        //$this->link = new PDO( "pgsql:host=" . HOST . ";dbname=" . DB . ";user=" . USER . ";password=" . PASS );
-        //$this->link = new PDO( "mysql:host=" . HOST . ";dbname=" . DB, USER, PASS );
-
         // Connexion par PDO
         //$this->link = new PDO( "sqlite:tamagogo.db" );
-        $this->link = new PDO( "pgsql:host=" . HOST . ";dbname=" . DB . ";user=" . USER . ";password=" . PASS );
+        //$this->link = new PDO( "pgsql:host=" . HOST . ";dbname=" . DB . ";user=" . USER . ";password=" . PASS );
+
+        $this->link = new PDO( "mysql:host=" . HOST . ";dbname=" . DB, USER, PASS );
         $this->link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 	catch( PDOException $e ) {
@@ -35,8 +36,9 @@ class ConnexionBD
     }
   }
 
-  public function getLastInsertId($att) {
-    return $this->link->lastInsertId($att."_id_seq");
+  public function getLastInsertId($table) {
+    //return $this->link->lastInsertId($att."_id_seq");   // PostgreSQL
+    return $this->doQuery("SELECT MAX(id) AS maxid FROM $table")[0]["maxid"];    // MySQL
   }
 
   public function doExec($sql) {

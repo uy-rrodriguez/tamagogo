@@ -9,7 +9,8 @@
     <script>
         $(function() {
             get_mascotte();
-            cron_actualiser_etat(1000);
+            actualiser_etat();
+            cron_actualiser_etat(2000);
         });
     </script>
 
@@ -25,30 +26,30 @@
     <!-- ------------- BARRES AVEC LES ETATS ---------------------------------------------------- -->
 
 		<div id="stats">
-			<div id="stat-sante" class="stat haut draggable">
+			<div id="stat-sante" class="stat normal draggable">
 				<div class="barre">
-					<span class="couleur" style="width: 85%;"></span>
+					<span class="couleur" style="width: 1%;"></span>
 					<span class="titre"></span>
 				</div>
 				<img src="img/sante.png">
 			</div>
-			<div id="stat-bonheur" class="stat haut draggable">
+			<div id="stat-bonheur" class="stat normal draggable">
 				<div class="barre">
-					<span class="couleur" style="width: 70%;"></span>
+					<span class="couleur" style="width: 1%;"></span>
 					<span class="titre"></span>
 				</div>
 				<img src="img/bonheur.png">
 			</div>
-			<div id="stat-faim" class="stat moyen draggable">
+			<div id="stat-faim" class="stat inverse draggable">
 				<div class="barre">
-					<span class="couleur" style="width: 40%;"></span>
+					<span class="couleur" style="width: 1%;"></span>
 					<span class="titre"></span>
 				</div>
 				<img src="img/faim.png">
 			</div>
-			<div id="stat-maladie" class="stat bas draggable">
+			<div id="stat-maladie" class="stat inverse draggable">
 				<div class="barre">
-					<span class="couleur" style="width: 10%;"></span>
+					<span class="couleur" style="width: 1%;"></span>
 					<span class="titre"></span>
 				</div>
 				<img src="img/maladie.png">
@@ -60,22 +61,22 @@
 
 		<div id="actions">
 			<div class="action draggable">
-				<div id="nourrir" class="bouton lancer-modal" data-title="Nourrir">
+				<div id="liste_nourriture" class="bouton lancer-modal" data-title="Nourrir">
 					<img src="img/nourrir.png">
 				</div>
 <!-- 				<span class="titre">Nourrir</span> -->
+			</div>
+			<div class="action draggable">
+				<div id="liste_medicaments" class="bouton lancer-modal" data-title="Soigner">
+					<img src="img/soigner.png">
+				</div>
+<!-- 				<span class="titre">Soigner</span> -->
 			</div>
 			<div class="action draggable">
 				<div id="jouer" class="bouton lancer-modal" data-title="Jouer">
 					<img src="img/jouer.png">
 				</div>
 <!-- 				<span class="titre">Jouer</span> -->
-			</div>
-			<div class="action draggable">
-				<div id="soigner" class="bouton lancer-modal" data-title="Soigner">
-					<img src="img/soigner.png">
-				</div>
-<!-- 				<span class="titre">Soigner</span> -->
 			</div>
 			<div class="action draggable">
 				<div id="habiller" class="bouton lancer-modal" data-title="Habiller">

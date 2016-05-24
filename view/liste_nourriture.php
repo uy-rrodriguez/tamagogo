@@ -1,22 +1,9 @@
 <?php
     include_once("bs/util.class.php");
-    include_once("model/nourriture.class.php");
 
     $elements = array();
-    for ($i = 0; $i < 40 ; $i++) {
-        $e = new Nourriture();
-//         $e->color = $color;
-//         $e->nom;
-//         $e->prix;
-//         $e->effets;
-        $e->id = $i;
-        $e->img = "img/nourrir.png";
-        $elements[] = $e;
-    }
-
-    $n = new Nourriture();
-    $ns = $n->getAll();
-    var_dump($ns);
+    if (isset($_SESSION["inventaire_nourrir"]))
+        $elements = $_SESSION["inventaire_nourrir"];
 ?>
 
 
@@ -37,12 +24,14 @@
             <img src="<?php echo $e->img; ?>"></img>
         </a>
         <div class="item-details" id="details-<?php echo $e->id; ?>">
-            <span class="item-nom"><?php echo $e->id; ?></span>
+            <span class="item-nom"><?php echo $e->nom; ?></span>
             <ul>
-                <li>Santé +1</li>
-                <li>Bonheur +15</li>
-                <li>Faim -10</li>
-                <li>Maladie +1</li>
+<?php
+                foreach ($e->effets as $ef) {
+                    $_SESSION["effet"] = $ef;
+                    include("view/template/effet.php");
+                }
+?>
             </ul>
         </div>
 <?php

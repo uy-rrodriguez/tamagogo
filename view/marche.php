@@ -37,12 +37,14 @@
                 </div>
             </a>
             <div class="item-details" id="details-<?php echo $e->id; ?>">
-                <span class="item-nom"><?php echo $e->id; ?></span>
+                <span class="item-nom">Effets</span>
                 <ul>
-                    <li>Santé +1</li>
-                    <li>Bonheur +15</li>
-                    <li>Faim -10</li>
-                    <li>Maladie +1</li>
+<?php
+                    foreach ($e->effets as $ef) {
+                        $_SESSION["effet"] = $ef;
+                        include("view/template/effet.php");
+                    }
+?>
                 </ul>
             </div>
 <?php
@@ -56,6 +58,6 @@
         <span class="total-argent">Vous avez 15 tama$</span>
     </div>
     <div class="droite">
-        <button type="button" class="btn btn-primary">Acheter</button>
+        <button type="button" class="btn btn-primary" onclick="acheter();">Acheter</button>
     </div>
 </div>

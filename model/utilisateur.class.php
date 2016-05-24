@@ -21,7 +21,7 @@ class Utilisateur extends BaseModel {
         //echo "<pre>". get_class($this) .": controllerLogin($email, $mdp)</pre>";
         try {
             $conn = new ConnexionBD();
-            $sql = "SELECT * FROM utilisateur WHERE nom = '" . $_REQUEST["nom"] . "' AND motDePasse = '" . $_REQUEST["mdp"] . "'";
+            $sql = "SELECT * FROM utilisateur WHERE nom = '" . $_REQUEST["nom"] . "' AND mot_de_passe = '" . $_REQUEST["mdp"] . "'";
             $res = $conn->doQueryObject($sql, "Utilisateur");
 
             if ($res === false || empty($res))

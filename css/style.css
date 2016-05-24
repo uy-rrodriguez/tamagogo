@@ -77,6 +77,23 @@ div {
     background-size: cover;
 }
 
+.loading:after {
+    content: "Attends un moment, le chat cherche le contenu.";
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    padding-top: 55%;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    color: #FFF;
+    opacity: 0.95;
+    background: #66CEFF url("../img/loading.gif") center center no-repeat;
+    border-radius: 5px;
+}
+
 
 /* *************************************************************************************************** */
 /*                  INDEX                                                                              */
@@ -241,19 +258,52 @@ div {
     border-radius: 15px;
 }
 
-.stat.haut > .barre > .couleur {
+/* Haut */
+.stat.normal.haut > .barre > .couleur {
     background-color: #51E620;
     background-image: linear-gradient(to bottom, #51E620, #3FAB1B);
 }
 
+.stat.inverse.bas > .barre > .couleur {
+    background-color: #51E620;
+    background-image: linear-gradient(to bottom, #51E620, #3FAB1B);
+}
+
+/* Moyen */
 .stat.moyen > .barre > .couleur {
     background-color: #EDB826;
     background-image: linear-gradient(to bottom, #EDB826, #DBA50F);
 }
 
-.stat.bas > .barre > .couleur {
+/* Bas */
+.stat.normal.bas > .barre > .couleur {
     background-color: #ED3A26;
     background-image: linear-gradient(to bottom, #ED3A26, #C91602);
+}
+
+.stat.inverse.haut > .barre > .couleur {
+    background-color: #ED3A26;
+    background-image: linear-gradient(to bottom, #ED3A26, #C91602);
+}
+
+
+/* Animation alerte */
+.stat.normal.bas > .barre:before, .stat.inverse.haut > .barre:before {
+    content: " ";
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    display: block;
+    background-color: #B20B1A;
+    border-radius: 15px;
+    opacity: 0.9;
+    animation: alerte 1s ease-out infinite;
+}
+
+@keyframes alerte {
+  50% { opacity: 0.0; }
 }
 
 
@@ -450,6 +500,22 @@ div {
 .item-details ul {
     margin-left: 15px;
     padding-left: 0px;
+}
+
+.item-details li {
+    width: 100%;
+}
+
+.item-details .mauvais, .item-details .bon {
+    float: right;
+}
+
+.item-details .mauvais {
+    color: #c50a2e;
+}
+
+.item-details .bon {
+    color: #1fa67b;
 }
 
 

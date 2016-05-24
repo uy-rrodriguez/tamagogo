@@ -13,7 +13,7 @@
                         <form id="login">
                             <div id="titre">
                                 <span id="titre-tama">tama</span>
-                                <span id="titre-gogo">GOGOAAA</span>
+                                <span id="titre-gogo">GOGO</span>
                             </div>
                             <input type="text" name="nom" placeholder="Nom" />
                             <input type="password" name="mdp" placeholder="Mot de passe" />

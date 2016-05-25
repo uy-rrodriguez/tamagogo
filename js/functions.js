@@ -74,7 +74,7 @@ function activer_items_selectables(selectables, basePopupID) {
     */
 }
 
-function activer_drag_drop(draggables, containment, droppables) {
+function activer_drag_drop(draggables, containment, droppables, onDrop = null) {
     $(function() {
         SESSION["elemDragged"] = null;
 
@@ -93,6 +93,9 @@ function activer_drag_drop(draggables, containment, droppables) {
             },
 
             stop: function(evt, elem) {
+                if (onDrop != null)
+                    onDrop();
+
                 SESSION["elemDragged"] = null;
                 $(this).show();
             }
@@ -220,6 +223,51 @@ function appel_ajax(action, onSuccess, onError = null, data = "null") {
     });
 }
 
+/*
+    Code générique pour faire appel à une action en envoyant l'élément sélectionné dans une liste.
+    Pour Soigner, Acheter et Nourrir.
+*/
+function action_element_selecctione(action, onSuccess = null) {
+    if (SESSION["elemSelected"] != null) {
+        // On cache le popup de l'élément sélectionné
+        $("#details-" + SESSION["elemSelected"].id).hide();
+
+        // On fait appel au controlleur
+        appel_ajax(action,
+            function (reponse, code) {
+                // On supprime l'objet de la liste dans le modal
+                $("#" + SESSION["elemSelected"].id).remove();
+                SESSION["elemSelected"] = null;
+
+                // On fait appel à une fonction en cas de succès
+                if (onSuccess != null)
+                    onSuccess();
+            },
+            null,
+            "id_objet=" + SESSION["elemSelected"].id
+        );
+    }
+}
+
+/*
+    Code générique pour faire appel à une action après d'un drag&drop.
+    Pour Habiller, Déshabiller et Modifier environnement (ajouter, supprimer).
+*/
+function action_drop(action, onSuccess = null) {
+    if (SESSION["elemDragged"] != null) {
+        // On fait appel au controlleur
+        appel_ajax(action,
+            function (reponse, code) {
+                // On fait appel à une fonction en cas de succès
+                if (onSuccess != null)
+                    onSuccess();
+            },
+            null,
+            "id_objet=" + SESSION["elemDragged"].id
+        );
+    }
+}
+
 
 
 /* *************************************************************************************************** */
@@ -271,63 +319,31 @@ function cron_actualiser_etat(temps) {
 }
 
 function nourrir() {
-    if (SESSION["elemSelected"] != null) {
-        // On cache le popup de l'élément sélectionné
-        $("#details-" + SESSION["elemSelected"].id).hide();
-
-        // On fait appel au controlleur
-        appel_ajax("nourrir",
-            function (reponse, code) {
-                // On supprime la nourriture de la liste dans le modal
-                $("#" + SESSION["elemSelected"].id).remove();
-                SESSION["elemSelected"] = null;
-
-                // On actualise les barres d'état
-                actualiser_etat();
-            },
-            null,
-            "id_objet=" + SESSION["elemSelected"].id
-        );
-    }
+    action_element_selectionne("nourrir", actualiser_etat);
 }
 
 function soigner() {
-    if (SESSION["elemSelected"] != null) {
-        // On cache le popup de l'élément sélectionné
-        $("#details-" + SESSION["elemSelected"].id).hide();
-
-        // On fait appel au controlleur
-        appel_ajax("soigner",
-            function (reponse, code) {
-                // On supprime le médicament de la liste dans le modal
-                $("#" + SESSION["elemSelected"].id).remove();
-                SESSION["elemSelected"] = null;
-
-                // On actualise les barres d'état
-                actualiser_etat();
-            },
-            null,
-            "id_objet=" + SESSION["elemSelected"].id
-        );
-    }
+    action_element_selectionne("soigner", actualiser_etat);
 }
 
 function acheter() {
-    if (SESSION["elemSelected"] != null) {
-        // On cache le popup de l'élément sélectionné
-        $("#details-" + SESSION["elemSelected"].id).hide();
+    action_element_selectionne("acheter");
+}
 
-        // On fait appel au controlleur
-        appel_ajax("acheter",
-            function (reponse, code) {
-                // On supprime l'objet de la liste dans le modal
-                $("#" + SESSION["elemSelected"].id).remove();
-                SESSION["elemSelected"] = null;
-            },
-            null,
-            "id_objet=" + SESSION["elemSelected"].id
-        );
-    }
+function habiller() {
+    action_drop("habiller");
+}
+
+function deshabiller() {
+    action_drop("deshabiller");
+}
+
+function ajouter_decoration() {
+    action_drop("ajouter_decoration");
+}
+
+function supprimer_decoration() {
+    action_drop("supprimer_decoration");
 }
 
 

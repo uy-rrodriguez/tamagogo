@@ -1,3 +1,10 @@
+<?php
+    include_once("model/humanoide.class.php");
+    include_once("model/animal.class.php");
+    include_once("model/monstre.class.php");
+
+    session_start();
+?>
 <!DOCTYPE html>
 <html>
 <head>

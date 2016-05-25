@@ -57,12 +57,28 @@
             soigner();
             break;
 
+        case "liste_vetements":
+            liste_vetements();
+            break;
+
         case "habiller":
             habiller();
             break;
 
-        case "environnement":
-            environnement();
+        case "deshabiller":
+            deshabiller();
+            break;
+
+        case "liste_decorations":
+            liste_decorations();
+            break;
+
+        case "ajouter_decoration":
+            ajouter_decoration();
+            break;
+
+        case "supprimer_decoration":
+            supprimer_decoration();
             break;
 
         case "jouer":
@@ -348,7 +364,7 @@
         }
     }
 
-    function habiller() {
+    function liste_vetements() {
         try {
             set_inventaire();
             echo get_contenu_modal("view/habiller.php", "Habiller");
@@ -358,10 +374,115 @@
         }
     }
 
-    function environnement() {
+    // Fonction auxiliare pour supporter le drag and drop entre l'inventaire et la mascotte
+    function drag_drop($id_objet, &$liste_drag, &$liste_drop, $vers_mascotte) {
+        try {
+            // On cherche l'objet dans la liste de départ
+            $key_objet = null;
+            $objet = null;
+            foreach ($liste_drag as $key => $o) {
+                if ($o->id == $id_objet) {
+                    $objet = $o;
+                    $key_objet = $key;
+                    break;
+                }
+            }
+            if ($objet == null)
+                throw new Exception("L'objet " . $id_objet . " n'a pas été trouvé dans la session");
+
+            // Les objets vont de la mascotte à l'inventaire ou viceversa.
+            // Le paramètre $vers_mascotte permet de déterminer comment affecter la base de données.
+            if ($vers_mascotte) {
+                unset($objet->utilisateur);
+                unset($objet->id_utilisateur);
+                $objet->mascotte = $_SESSION["mascotte"];
+                $objet->id_mascotte = $objet->mascotte->id;
+            }
+            else {
+                unset($objet->mascotte);
+                unset($objet->id_mascotte);
+                $objet->utilisateur = $_SESSION["utilisateur"];
+                $objet->id_utilisateur = $objet->utilisateur->id;
+            }
+
+            // Modification dans la base de données
+            $objet->update();
+
+            // On le déplace de liste
+            $liste_drop[] = $objet;
+            unset($liste_drag[$key_objet]);
+        }
+        catch(Exception $ex) {
+            throw new Exception("Erreur de drag&drop. " . $ex->getMessage());
+        }
+    }
+
+    function habiller() {
+        try {
+            if (! isset($_SESSION["inventaire_habiller"]))
+                throw new Exception("La liste de vêtements n'a pas été chargée dans la session");
+
+            if (! isset($_SESSION["mascotte"]->vetements))
+                $_SESSION["mascotte"]->vetements = array();
+
+            drag_drop($_REQUEST["id_objet"], $_SESSION["inventaire_habiller"], $_SESSION["mascotte"]->vetements, true);
+
+            retourner_succes();
+        }
+        catch(Exception $ex) {
+            retourner_erreur($ex->getMessage());
+        }
+    }
+
+    function deshabiller() {
+        try {
+            if (! isset($_SESSION["inventaire_habiller"]))
+                throw new Exception("La liste de vêtements n'a pas été chargée dans la session");
+
+            drag_drop($_REQUEST["id_objet"], $_SESSION["mascotte"]->vetements, $_SESSION["inventaire_habiller"], false);
+
+            retourner_succes();
+        }
+        catch(Exception $ex) {
+            retourner_erreur($ex->getMessage());
+        }
+    }
+
+    function liste_decorations() {
         try {
             set_inventaire();
             echo get_contenu_modal("view/environnement.php", "Modifier environnement");
+        }
+        catch(Exception $ex) {
+            retourner_erreur($ex->getMessage());
+        }
+    }
+
+    function ajouter_decoration() {
+        try {
+            if (! isset($_SESSION["inventaire_environnement"]))
+                throw new Exception("La liste de décorations n'a pas été chargée dans la session");
+
+            if (! isset($_SESSION["mascotte"]->decorations))
+                $_SESSION["mascotte"]->decorations = array();
+
+            drag_drop($_REQUEST["id_objet"], $_SESSION["inventaire_environnement"], $_SESSION["mascotte"]->decorations, true);
+
+            retourner_succes();
+        }
+        catch(Exception $ex) {
+            retourner_erreur($ex->getMessage());
+        }
+    }
+
+    function supprimer_decoration() {
+        try {
+            if (! isset($_SESSION["inventaire_environnement"]))
+                throw new Exception("La liste de décorations n'a pas été chargée dans la session");
+
+            drag_drop($_REQUEST["id_objet"], $_SESSION["mascotte"]->decorations, $_SESSION["inventaire_environnement"], false);
+
+            retourner_succes();
         }
         catch(Exception $ex) {
             retourner_erreur($ex->getMessage());

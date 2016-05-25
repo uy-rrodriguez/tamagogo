@@ -52,9 +52,9 @@
         echo "> Mascotte. <br/>";
         $sql = "INSERT INTO mascotte (id, classe, id_utilisateur, id_maladie, id_env_prefere, id_env_actuel, nom,
                                         is_male, age, bonheur, faim, sante, pourc_maladie)
-                VALUES (1, 'Humanoide', 1, NULL, 2, 1, 'Nicol', true, 21, 40, 60, 70, 30),
-                        (2, 'Animal', 2, NULL, 2, 1, 'Cheshire', true, 5, 0, 0, 0, 0),
-                        (3, 'Monstre', 3, NULL, 2, 1, 'El Conejo Loco', true, 5, 100, 50, 80, 2);";
+                VALUES (1, 'Humanoide', 1, NULL, 1, 1, 'Nicol', true, 21, 40, 60, 70, 30),
+                        (2, 'Animal', 2, NULL, 2, 2, 'Cheshire', true, 5, 0, 0, 0, 0),
+                        (3, 'Monstre', 3, NULL, 4, 4, 'El Conejo Loco', true, 5, 100, 50, 80, 2);";
         $conn->doExec($sql);
 
         echo "> Environnements debloques. <br/>";

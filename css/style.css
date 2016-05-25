@@ -73,8 +73,23 @@ div {
 }
 
 #ecran.main {
-    background-image: url("../img/bg/bg_chambre2.jpg");
     background-size: cover;
+}
+
+#ecran.main.environn-1 {
+    background-image: url("../img/bg/bg_chambre2.jpg");
+}
+
+#ecran.main.environn-2 {
+    background-image: url("../img/bg/bg_plage1.jpg");
+}
+
+#ecran.main.environn-3 {
+    background-image: url("../img/bg/bg_salon.jpg");
+}
+
+#ecran.main.environn-4 {
+    background-image: url("../img/bg/bg_foret1.jpg");
 }
 
 .loading:after {

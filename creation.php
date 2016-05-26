@@ -9,7 +9,7 @@
             $("input").keypress(function(event){
                 var keycode = (event.keyCode ? event.keyCode : event.which);
                 if (keycode == 13)
-                    login();
+                    return false;
             });
         });
     </script>
@@ -30,7 +30,7 @@
                             <input type="text" name="nom" placeholder="Nom" />
                             <select name="sexe" placeholder="Sexe">
                                 <option value="femelle">Fille</option>
-                                <option value="male">Gar&cacute;on</option>
+                                <option value="male">Gar&ccedil;on</option>
                             </select>
 
                             <div id="options-mascotte">

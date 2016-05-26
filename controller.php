@@ -155,13 +155,15 @@
 
     // Actualise un etat a partir d'une valeur et realise les controles necessaires
     function changer_etat(&$var_etat, $coef) {
-        $var_etat += $coef;
+        $var_etat += ($coef / 10);
         if ($var_etat > 100)
             $var_etat = 100;
         else if ($var_etat < 0)
             $var_etat = 0;
+        /*
         else
             $var_etat = intval($var_etat);
+        */
 
     }
 
@@ -301,8 +303,8 @@
 
             // Actualisation de base
             changer_etat($m->sante, -20);
-            changer_etat($m->bonheur, -30);
-            changer_etat($m->faim, 15);
+            changer_etat($m->bonheur, -20);
+            changer_etat($m->faim, 10);
             changer_etat($m->pourc_maladie, 10);
 
             // Actualisation selon l'environnement
@@ -320,6 +322,11 @@
             foreach ($vets as $v) {
                 actualiser_etat_objet($v);
             }
+
+            $m->sante = intval($m->sante);
+            $m->bonheur = intval($m->bonheur);
+            $m->faim = intval($m->faim);
+            $m->pourc_maladie = intval($m->pourc_maladie);
 
             retourner_succes(array("sante" => $m->sante,
                                    "bonheur" => $m->bonheur,
@@ -576,7 +583,8 @@
 
     function jouer() {
         try {
-            $_SESSION["utilisateur"]->argent += rand(-1, 1) * (rand(0, 20) * 10);
+            $_SESSION["utilisateur"]->argent += rand(-1, 1) * (rand(0, 50) * 10);
+            $_SESSION["utilisateur"]->argent = max(0, $_SESSION["utilisateur"]->argent);
             retourner_succes(array("argent" => $_SESSION["utilisateur"]->argent));
         }
         catch(Exception $ex) {
@@ -615,8 +623,10 @@
     }
 
     function tuer() {
+        sleep(3);
         try {
             $_SESSION["mascotte"]->del_complex();
+            unset($_SESSION["mascotte"]);
             retourner_succes();
         }
         catch(Exception $ex) {

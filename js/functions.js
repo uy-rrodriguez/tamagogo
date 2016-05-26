@@ -177,11 +177,11 @@ function changer_barre(id, valeur) {
 
 /* Affichage d'une image pendant qu'on attend une reponse */
 function afficher_attente(selector) {
-    //$(selector).toggleClass("loading");
+    $(selector).toggleClass("loading");
 }
 
 function cacher_attente(selector) {
-    //$(selector).toggleClass("loading");
+    $(selector).toggleClass("loading");
 }
 
 /* Cette fonction va chercher via AJAX le contenu à afficher dans le modal
@@ -233,14 +233,14 @@ function retourner_erreur(message, callback) {
    data est utilisé dans le cas d'envoie de formulaires ou d'informations extras au contrôleur.
 */
 function appel_ajax(action, onSuccess, onError = null, data = "null") {
-    afficher_attente(".modal-content");
+    //afficher_attente(".modal-content");
 
     $.ajax({
         url: "controller.php?action=" + action + "&" + data,
         method: "post",
 
         success: function(reponse, code) {
-            cacher_attente(".modal-content");
+            //cacher_attente(".modal-content");
 
             try {
                 repJSON = JSON.parse(reponse);
@@ -337,7 +337,7 @@ function actualiser_etat() {
 }
 
 function cron_actualiser_etat(temps) {
-    setInterval(actualiser_etat, temps);
+    SESSION["id_interval"] = setInterval(actualiser_etat, temps);
 }
 
 function nourrir() {
@@ -417,12 +417,20 @@ function creer_mascotte(classe) {
 }
 
 function tuer() {
-    // On fait appel au controlleur
-    appel_ajax("tuer",
-        function (reponse, code) {
-            document.location.href = "index.php";
-        }
-    );
+    var ok = confirm("T'es sûr de le tuer ?");
+    if (ok) {
+        // On desactive la mise a jour de l'etat
+        clearInterval(SESSION["id_interval"]);
+
+        afficher_attente("#ecran");
+
+        // On fait appel au controlleur
+        appel_ajax("tuer",
+            function (reponse, code) {
+                document.location.href = "creation.php";
+            }
+        );
+    }
 }
 
 

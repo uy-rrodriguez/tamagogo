@@ -6,6 +6,7 @@ require_once("medicament.class.php");
 require_once("nourriture.class.php");
 require_once("effet.class.php");
 
+
 class ObjetFactory {
     const PRIX_MIN = 1;
     const PRIX_MAX = 100;
@@ -119,6 +120,8 @@ class ObjetFactory {
 
                 $obj = new $classe();
                 $obj->id = $i; // Cet id est faux, on le changera lors du stockage
+                $obj->utilisateur = $_SESSION["utilisateur"];
+                $obj->id_utilisateur = $obj->utilisateur->id;
                 $obj->prix = rand(ObjetFactory::PRIX_MIN, ObjetFactory::PRIX_MAX) * ObjetFactory::FACTEUR_PRIX;
                 $obj->effets = ObjetFactory::calculer_effets($classe, $obj->prix);
 
@@ -126,11 +129,13 @@ class ObjetFactory {
                     case "Decoration":
                         $obj->nom = "Décoration";
                         $obj->img = "img/decoration.png";
+                        $obj->id_mascotte = null;
                         break;
 
                     case "Vetement":
                         $obj->nom = "Vêtement";
                         $obj->img = "img/habiller.png";
+                        $obj->id_mascotte = null;
                         break;
 
                     case "Medicament":

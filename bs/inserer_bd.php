@@ -57,10 +57,12 @@
                         (3, 'Monstre', 3, NULL, 4, 4, 'El Conejo Loco', true, 5, 100, 50, 80, 2);";
         $conn->doExec($sql);
 
+        /*
         echo "> Environnements debloques. <br/>";
         $sql = "INSERT INTO env_debloques (id_mascotte, id_environnement)
                 VALUES (1, 1);";
         $conn->doExec($sql);
+        */
 
         echo "> Humanoide. <br/>";
         $sql = "INSERT INTO humanoide (id) VALUES (1);";

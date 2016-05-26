@@ -6,18 +6,17 @@
 ?>
     <script>
         $(function() {
-            get_mascotte();
+            //get_mascotte();
             actualiser_etat();
             cron_actualiser_etat(2000);
         });
     </script>
 
-    <div id="ecran" class="main <?php echo "environn-" . $_SESSION["mascotte"]->id_env_actuel; ?>">
+    <div id="ecran" class="main <?php echo 'environn-' . $_SESSION['mascotte']->id_env_actuel; ?>">
 
     <!-- ------------- IMAGE DU TAMA ACTUEL ----------------------------------------------------- -->
 
-		<div id="tama" class="draggable">
-			<!--<img src="img/tamas/nicolas.png">-->
+		<div id="tama" class="draggable <?php echo strtolower(get_class($_SESSION['mascotte'])); ?>">
 		</div>
 
 
@@ -69,7 +68,7 @@
 				</div>
 			</div>
 			<div class="action draggable">
-				<div id="jouer" class="bouton lancer-modal" data-title="Jouer">
+				<div id="liste_jeux" class="bouton lancer-modal" data-title="Jouer">
 					<img src="img/jouer.png">
 				</div>
 			</div>
@@ -86,10 +85,22 @@
 		</div>
 
 
-    <!-- ------------- BOUTON SORTIR ------------------------------------------------------------ -->
+    <!-- ------------- BOUTONS BAS GAUCHE ------------------------------------------------------- -->
 
-		<div id="sortir" class="action draggable">
-			<div class="bouton" data-title="Sortir" onclick="logout();">x</div>
+        <div id="tuer" class="action action-speciale draggable">
+			<div class="bouton" data-title="Tuer">
+                <img src="img/tuer.png">
+            </div>
+		</div>
+		<div id="sortir" class="action action-speciale draggable">
+			<div class="bouton" data-title="Sortir">x</div>
+		</div>
+
+
+    <!-- ------------- NOM MASCOTTE, BAS CENTRE ------------------------------------------------- -->
+
+        <div id="nom-mascotte" class="draggable">
+			<?php echo $_SESSION["mascotte"]->nom; ?>
 		</div>
 
 

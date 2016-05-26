@@ -23,11 +23,7 @@ abstract class Objet extends BaseModel {
 
         try {
             // Stockage de la classe mère
-            $vars = array("nom", "prix", "img");
-            if (isset($this->utilisateur)) {
-                $vars[] = "id_utilisateur";
-                $this->id_utilisateur = $this->utilisateur->id;
-            }
+            $vars = array("nom", "prix", "img", "id_utilisateur");
 
             $this->save_as("objet", $vars, false, $is_insert);
 
@@ -39,12 +35,12 @@ abstract class Objet extends BaseModel {
                 $this->id = $conn->getLastInsertId("objet");
 
                 // Stockage des donnees du fils
+                $classe = get_class($this);
                 $vars = array("id");
-                if (isset($this->mascotte)) {
+                if ($classe == "Vetement" || $classe == "Decoration") {
                     $vars[] = "id_mascotte";
-                    $this->id_mascotte = $this->mascotte->id;
                 }
-                $this->save_as(strtolower(get_class($this)), $vars, false, $is_insert);
+                $this->save_as(strtolower($classe), $vars, false, $is_insert);
 
                 // Stockage des effets
                 foreach($this->effets as $effet) {
@@ -57,14 +53,16 @@ abstract class Objet extends BaseModel {
                 }
             }
 
-            else if (count($vars) > 1) {
+            else {
                 // Stockage des donnees du fils
+                $classe = get_class($this);
                 $vars = array("id");
-                if (isset($this->mascotte)) {
+                if ($classe == "Vetement" || $classe == "Decoration") {
                     $vars[] = "id_mascotte";
-                    $this->id_mascotte = $this->mascotte->id;
                 }
-                $this->save_as(strtolower(get_class($this)), $vars, false, $is_insert);
+
+                if (count($vars) > 1)
+                    $this->save_as(strtolower($classe), $vars, false, $is_insert);
             }
         }
         catch(Exception $ex) {
@@ -88,6 +86,31 @@ abstract class Objet extends BaseModel {
             $sql = "SELECT * FROM " . strtolower(get_class($this));
             $sql .= " INNER JOIN objet USING (id)";
             $sql .= " WHERE id_utilisateur = " . $idUtilisateur;
+            $res = $conn->doQueryObject($sql, get_class($this));
+
+            if ($res === false || empty($res))
+                return null;
+
+            // S'il y a des objets, on charge les effets
+            foreach($res as $obj) {
+                $obj->effets = (new Effet())->getByObjet($obj->id);
+            }
+
+            return $res;
+        }
+        catch(Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    // Fonction pour obtenir tous les objets associes a la mascotte
+    // Marche seulement dans les cas des Vetements et Decorations
+    public function getByMascotte($idMascotte) {
+        try {
+            $conn = new ConnexionBD();
+            $sql = "SELECT * FROM " . strtolower(get_class($this));
+            $sql .= " INNER JOIN objet USING (id)";
+            $sql .= " WHERE id_mascotte = " . $idMascotte;
             $res = $conn->doQueryObject($sql, get_class($this));
 
             if ($res === false || empty($res))

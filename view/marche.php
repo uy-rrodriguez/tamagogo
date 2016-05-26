@@ -1,7 +1,4 @@
 <?php
-    error_reporting(E_ALL ^ E_NOTICE);
-    session_start();
-
     include_once("bs/util.class.php");
 
     $elements = array();
@@ -55,7 +52,10 @@
 
 <div class="modal-boutons">
     <div class="gauche">
-        <span class="total-argent">Vous avez 15 tama$</span>
+        <span id="argent">
+            <img src="img/argent.png" />
+            <span id="total-argent"><?php echo $_SESSION["utilisateur"]->argent; ?></span>
+        </span>
     </div>
     <div class="droite">
         <button type="button" class="btn btn-primary" onclick="acheter();">Acheter</button>

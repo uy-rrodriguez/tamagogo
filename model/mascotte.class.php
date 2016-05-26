@@ -97,6 +97,78 @@ abstract class Mascotte extends BaseModel {
             throw $ex;
         }
     }
+
+
+    // On redéfinit le stockage. On stocke séparamment la classe de base et son fils
+    public function save_update($is_insert) {
+        $sql = "";
+
+        try {
+            // Stockage de la classe mère
+            $vars = array("classe", "id_utilisateur", "id_maladie", "id_env_prefere", "id_env_actuel", "nom",
+                            "is_male", "age", "bonheur", "faim", "sante", "pourc_maladie");
+
+            $this->save_as("mascotte", $vars, false, $is_insert);
+
+
+            // On stocke si c'est un INSERT ou si, lors d'un UPDATE, dans $vars il y a plus de proprietes que seulement l'id.
+            if ($is_insert) {
+                // Recuperation du nouveau id
+                $conn = new ConnexionBD();
+                $this->id = $conn->getLastInsertId("mascotte");
+
+                // Stockage des donnees du fils
+                $vars = array("id");
+                $this->save_as(strtolower(get_class($this)), $vars, false, true);
+            }
+
+            else {
+                // Stockage des donnees du fils. Pour l'instant on ne stocke rien si c'est un UPDATE, les fils
+                // n'ont pas d'attributs specifiques.
+                $vars = array("id");
+                if (count($vars) > 1)
+                    $this->save_as(strtolower(get_class($this)), $vars, false, false);
+            }
+        }
+        catch(Exception $ex) {
+            throw new Exception($ex->getMessage() . ". SQL : $sql");
+        }
+    }
+
+    public function save() {
+        $this->save_update(true);
+    }
+
+    public function update() {
+        $this->save_update(false);
+    }
+
+
+    // Suppression de la mascotte et de tout ce qui est lie
+    public function del_complex() {
+        $sql = "";
+        try {
+            // Classe concrete
+            $this->del();
+
+            // Objets associes
+            if (isset($this->vetements))
+                foreach($this->vetements as $o)
+                    $o->del_complex();
+
+            if (isset($this->decorations))
+                foreach($this->decorations as $o)
+                    $o->del_complex();
+
+            // Classe abstracte
+            $conn = new ConnexionBD();
+            $sql = "DELETE FROM mascotte WHERE id = " . $this->id;
+            $conn->doExec($sql);
+        }
+        catch(Exception $ex) {
+            throw new Exception($ex->getMessage() . ". SQL : $sql");
+        }
+    }
 }
 
 ?>

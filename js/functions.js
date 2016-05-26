@@ -20,7 +20,21 @@ $(function() {
             charger_modal(this.id)
     });
 
-    //charger_modal("nourrir");
+    $( "#sortir" ).click(function () {
+        if ($(this).hasClass("btn-dragged"))
+            $(this).removeClass("btn-dragged");
+        else
+            logout()
+    });
+
+    $( "#tuer" ).click(function () {
+        if ($(this).hasClass("btn-dragged"))
+            $(this).removeClass("btn-dragged");
+        else
+            tuer()
+    });
+
+    //charger_modal("marche");
 });
 
 
@@ -55,6 +69,7 @@ function activer_items_selectables(selectables, basePopupID) {
         var popup = $("#" + basePopupID + $(this).attr("id"));
         var pos = $(this).position();
         var scrollTop = popup.parent().scrollTop();
+
         popup.show();
         popup.css({top: pos.top + scrollTop, left: pos.left});
 
@@ -74,7 +89,24 @@ function activer_items_selectables(selectables, basePopupID) {
     */
 }
 
-function activer_drag_drop(draggables, containment, droppables, onDrop = null) {
+function activer_items_draggables_selectables(selectables, basePopupID) {
+    activer_items_selectables(selectables, basePopupID);
+
+    $( selectables ).click(function () {
+        $(this).focusin();
+    });
+
+    $( selectables ).focusout(function () {
+        // On cache le popup à côté
+        var popup = $("#" + basePopupID + $(this).attr("id"));
+        popup.hide();
+
+        // Et on supprime l'élement de la session
+        SESSION["elemSelected"] = null;
+    });
+}
+
+function activer_drag(draggables, containment) {
     $(function() {
         SESSION["elemDragged"] = null;
 
@@ -84,6 +116,9 @@ function activer_drag_drop(draggables, containment, droppables, onDrop = null) {
             cursor: "move",
 
             start: function(evt, elem) {
+                //On fait perdre le focus. Utile pour le elements qui sont aussi selectables
+                $(draggables).focusout();
+
                 SESSION["elemDragged"] = $(this);
                 $(this).hide(400,
                              function() {
@@ -93,19 +128,23 @@ function activer_drag_drop(draggables, containment, droppables, onDrop = null) {
             },
 
             stop: function(evt, elem) {
-                if (onDrop != null)
-                    onDrop();
-
                 SESSION["elemDragged"] = null;
                 $(this).show();
             }
         });
+    });
+}
 
+function activer_drop(droppables, onDrop = null) {
+    $(function() {
         $( droppables ).droppable({
             drop: function(evt, ui) {
                 $(this).append(ui.draggable);
                 var h = $(this).height();
                 $(this).animate({ scrollTop: h }, 50);
+
+                if (onDrop != null)
+                    onDrop(evt, ui);
             }
         });
     });
@@ -208,6 +247,8 @@ function appel_ajax(action, onSuccess, onError = null, data = "null") {
 
                 if (repJSON.resultat == "OK")
                     onSuccess(repJSON);
+                else if (repJSON.resultat == "redirect")
+                    document.location.href = repJSON.page;
                 else
                     retourner_erreur(repJSON.error, onError);
             }
@@ -227,7 +268,7 @@ function appel_ajax(action, onSuccess, onError = null, data = "null") {
     Code générique pour faire appel à une action en envoyant l'élément sélectionné dans une liste.
     Pour Soigner, Acheter et Nourrir.
 */
-function action_element_selecctione(action, onSuccess = null) {
+function action_element_selectionne(action, onSuccess = null) {
     if (SESSION["elemSelected"] != null) {
         // On cache le popup de l'élément sélectionné
         $("#details-" + SESSION["elemSelected"].id).hide();
@@ -241,29 +282,10 @@ function action_element_selecctione(action, onSuccess = null) {
 
                 // On fait appel à une fonction en cas de succès
                 if (onSuccess != null)
-                    onSuccess();
+                    onSuccess(reponse, code);
             },
             null,
             "id_objet=" + SESSION["elemSelected"].id
-        );
-    }
-}
-
-/*
-    Code générique pour faire appel à une action après d'un drag&drop.
-    Pour Habiller, Déshabiller et Modifier environnement (ajouter, supprimer).
-*/
-function action_drop(action, onSuccess = null) {
-    if (SESSION["elemDragged"] != null) {
-        // On fait appel au controlleur
-        appel_ajax(action,
-            function (reponse, code) {
-                // On fait appel à une fonction en cas de succès
-                if (onSuccess != null)
-                    onSuccess();
-            },
-            null,
-            "id_objet=" + SESSION["elemDragged"].id
         );
     }
 }
@@ -327,23 +349,80 @@ function soigner() {
 }
 
 function acheter() {
-    action_element_selectionne("acheter");
+    action_element_selectionne(
+        "acheter",
+        function(reponse, code) {
+            $("#total-argent").html(reponse.argent);
+        }
+    );
 }
 
-function habiller() {
-    action_drop("habiller");
+function habiller(event, ui) {
+    // On fait appel au controlleur
+    appel_ajax("habiller",
+        function (reponse, code) {},
+        null,
+        "id_objet=" + ui.draggable.attr("id")
+    );
 }
 
-function deshabiller() {
-    action_drop("deshabiller");
+function deshabiller(event, ui) {
+    // On fait appel au controlleur
+    appel_ajax("deshabiller",
+        function (reponse, code) {},
+        null,
+        "id_objet=" + ui.draggable.attr("id")
+    );
 }
 
-function ajouter_decoration() {
-    action_drop("ajouter_decoration");
+function ajouter_decoration(event, ui) {
+    // On fait appel au controlleur
+    appel_ajax("ajouter_decoration",
+        function (reponse, code) {},
+        null,
+        "id_objet=" + ui.draggable.attr("id")
+    );
 }
 
-function supprimer_decoration() {
-    action_drop("supprimer_decoration");
+function supprimer_decoration(event, ui) {
+    // On fait appel au controlleur
+    appel_ajax("supprimer_decoration",
+        function (reponse, code) {},
+        null,
+        "id_objet=" + ui.draggable.attr("id")
+    );
+}
+
+function jouer() {
+    // On cache le popup de l'élément sélectionné
+    //$("#details-" + SESSION["elemSelected"].id).hide();
+
+    // On fait appel au controlleur
+    appel_ajax("jouer",
+        function (reponse, code) {
+            $("#total-argent").html(reponse.argent);
+        }
+    );
+}
+
+function creer_mascotte(classe) {
+    // On fait appel au controlleur
+    appel_ajax("creer_mascotte",
+        function (reponse, code) {
+            document.location.href = "main.php";
+        },
+        null,
+        $("#form-creation-mascotte").serialize() + "&classe=" + classe
+    );
+}
+
+function tuer() {
+    // On fait appel au controlleur
+    appel_ajax("tuer",
+        function (reponse, code) {
+            document.location.href = "index.php";
+        }
+    );
 }
 
 

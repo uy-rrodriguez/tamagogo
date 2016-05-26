@@ -17,7 +17,6 @@
     <div id="ecran" class="index">
 
         <div id="index-accueil" class="modal fade" role="dialog">
-        <!--<div id="index-accueil" role="dialog">-->
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -37,7 +36,7 @@
 
                             <a href="#" class="bouton" id="btn-login" onclick="login();"><div>Login</div></a>
                             <a href="#" class="bouton" id="btn-inscription"><div>Inscription</div></a>
-                        <form>
+                        </form>
 
                     </div>
                 </div><!-- /.modal-content -->

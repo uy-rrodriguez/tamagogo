@@ -48,12 +48,16 @@ abstract class BaseModel {
             if ($do_insert) {
                 $values = array();
                 foreach ($props as $att) {
-                    $values[] = $this->$att;
+                    $value = $this->$att;
+                    if (is_null($value))
+                        $values[] = "NULL";
+                    else
+                        $values[] = "'" . $value . "'";
                 }
 
                 $sql = "INSERT INTO $table";
                 $sql .= " (" . implode(",", $props) . ")";
-                $sql .= " VALUES ('" . implode("','", $values) . "')";
+                $sql .= " VALUES (" . implode(", ", $values) . ")";
             }
             else {
                 $sql = "UPDATE $table SET ";
@@ -61,8 +65,12 @@ abstract class BaseModel {
 
                 foreach ($props as $att) {
                     $value = $this->$att;
-                    if ($att != "id" && $value)
-                        $set[] = "$att = '" . $value . "'" ;
+                    if ($att != "id") {
+                        if (is_null($value))
+                            $set[] = "$att = NULL";
+                        else
+                            $set[] = "$att = '" . $value . "'";
+                    }
                 }
 
                 $sql .= implode(",", $set);
@@ -91,8 +99,13 @@ abstract class BaseModel {
     */
     public function save() {
         try {
-            return $this->save_as(strtolower(get_class($this)),
-                                  array_keys(get_object_vars($this)));
+            $props = array_keys(get_object_vars($this));
+            foreach ($props as $key => $p)
+                if (is_array($this->$p))
+                    unset($props[$key]);
+            $props = array_values($props);
+
+            return $this->save_as(strtolower(get_class($this)), $props);
         }
         catch(Exception $ex) {
             //echo "<h1>" . $ex->getMessage() . "</h1>";

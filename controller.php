@@ -81,8 +81,20 @@
             supprimer_decoration();
             break;
 
-        case "jouer":
+        case "liste_jeux":
             echo get_contenu_modal("view/liste_jeux.php", "S&eacute;lectionner un jeu");
+            break;
+
+        case "jouer":
+            jouer();
+            break;
+
+        case "creer_mascotte":
+            creer_mascotte();
+            break;
+
+        case "tuer":
+            tuer();
             break;
     }
 
@@ -116,16 +128,30 @@
         exit();
     }
 
-    function set_inventaire() {
-        try {
-            if (! isset($_SESSION["inventaire"])) {
-                $_SESSION["inventaire"] = array();
-            }
-        }
-        catch(Exception $ex) {
-            throw $ex;
+    function retourner_redirect($page) {
+        echo json_encode(array("resultat" => "redirect",
+                               "page" => $page));
+        exit();
+    }
+
+
+    // Charge la mascotte de la base de donnes a partir de l'utilisateur connecte
+    function charger_mascotte() {
+        // Recherche de la mascotte
+        $classe = Mascotte::getClasseByUtilisateur($_SESSION["utilisateur"]->id);
+
+        if (is_null($classe))
+            return false;
+
+        else {
+            $m = (new $classe())->getByUtilisateur($_SESSION["utilisateur"]->id);
+            $m->vetements = (new Vetement())->getByMascotte($m->id);
+            $m->decorations = (new Decoration())->getByMascotte($m->id);
+            $_SESSION["mascotte"] = $m;
+            return true;
         }
     }
+
 
     // Actualise un etat a partir d'une valeur et realise les controles necessaires
     function changer_etat(&$var_etat, $coef) {
@@ -157,6 +183,50 @@
         }
     }
 
+    // Fonction auxiliare pour supporter le drag and drop entre l'inventaire et la mascotte
+    function drag_drop($id_objet, &$liste_drag, &$liste_drop, $vers_mascotte) {
+        try {
+            // On cherche l'objet dans la liste de départ
+            $key_objet = null;
+            $objet = null;
+            foreach ($liste_drag as $key => $o) {
+                if ($o->id == $id_objet) {
+                    $objet = $o;
+                    $key_objet = $key;
+                    break;
+                }
+            }
+            if ($objet == null)
+                throw new Exception("L'objet " . $id_objet . " n'a pas été trouvé dans la session");
+
+            // Les objets vont de la mascotte à l'inventaire ou viceversa.
+            // Le paramètre $vers_mascotte permet de déterminer comment affecter la base de données.
+            if ($vers_mascotte) {
+                unset($objet->utilisateur);
+                $objet->id_utilisateur = null;
+                $objet->mascotte = $_SESSION["mascotte"];
+                $objet->id_mascotte = $objet->mascotte->id;
+            }
+            else {
+                unset($objet->mascotte);
+                $objet->id_mascotte = null;
+                $objet->utilisateur = $_SESSION["utilisateur"];
+                $objet->id_utilisateur = $objet->utilisateur->id;
+            }
+
+            // Modification dans la base de données
+            $objet->update();
+
+            // On le déplace de liste
+            $liste_drop[] = $objet;
+            unset($liste_drag[$key_objet]);
+            $liste_drag = array_values($liste_drag);
+        }
+        catch(Exception $ex) {
+            throw new Exception("Erreur de drag&drop. " . $ex->getMessage());
+        }
+    }
+
 
 
     /* *************************************************************************************************** */
@@ -164,20 +234,32 @@
     /* *************************************************************************************************** */
 
     function login() {
-        //sleep(1);
         try {
             $res = Utilisateur::controllerLogin($_REQUEST["nom"], $_REQUEST["mdp"]);
             if ($res == null)
                 retourner_erreur("Nom ou mot de passe incorrect");
             else {
-                $classe = Mascotte::getClasseByUtilisateur($res->id);
-
                 // Inicialisation de la session
-                $_SESSION["mascotte"] = (new $classe())->getByUtilisateur($res->id);
                 $_SESSION["utilisateur"] = $res;
 
-                retourner_succes(array("utilisateur" => $res,
-                                       "mascotte" => $_SESSION["mascotte"]));
+                // On charge les donnes de la mascotte
+                $existe = charger_mascotte();
+
+                // S'il n'y a pas de mascotte, on va a la page de creation
+                if (! $existe) {
+                    retourner_redirect("creation.php");
+                }
+                else {
+                    // Pour chaque heure qui s'est passe depuis la derniere connexion, on calcule l'etat
+                    $now = time();
+                    $diff = $now - $_SESSION["utilisateur"]->derniere_connexion;
+                    $heures = $diff / 60 / 60; // heures = secondes / 60 / 60
+                    for ($heures; $heures > 0; $heures--)
+                        actualiser_etat();
+
+                    retourner_succes(array("utilisateur" => $res,
+                                           "mascotte" => $_SESSION["mascotte"]));
+                }
             }
         }
         catch(Exception $ex) {
@@ -187,6 +269,13 @@
 
     function logout() {
         try {
+            // Stockage de l'utilisateur
+            $_SESSION["utilisateur"]->derniere_connexion = time();
+            $_SESSION["utilisateur"]->save();
+
+            // Stockage de la mascotte
+            $_SESSION["mascotte"]->update();
+
             session_destroy();
             retourner_succes();
         }
@@ -206,21 +295,31 @@
 
 
     // Cette fonction actualise l'etat en fonction des objets lies a la mascotte (environnement, vetements)
-    // et par rapport a l'heure de derniere connexion
     function actualiser_etat() {
         try {
             $m = $_SESSION["mascotte"];
 
             // Actualisation de base
-            changer_etat($m->sante, -1);
-            changer_etat($m->bonheur, -2);
-            changer_etat($m->faim, 2);
-            changer_etat($m->pourc_maladie, 1);
+            changer_etat($m->sante, -20);
+            changer_etat($m->bonheur, -30);
+            changer_etat($m->faim, 15);
+            changer_etat($m->pourc_maladie, 10);
 
             // Actualisation selon l'environnement
+            $decos = array();
+            if (isset($_SESSION["mascotte"]->decorations))
+                $decos = $_SESSION["mascotte"]->decorations;
+            foreach ($decos as $d) {
+                actualiser_etat_objet($d);
+            }
 
             // Actualisation selon les vetements
-
+            $vets = array();
+            if (isset($_SESSION["mascotte"]->vetements))
+                $vets = $_SESSION["mascotte"]->vetements;
+            foreach ($vets as $v) {
+                actualiser_etat_objet($v);
+            }
 
             retourner_succes(array("sante" => $m->sante,
                                    "bonheur" => $m->bonheur,
@@ -260,16 +359,25 @@
             if ($achete == null)
                 throw new Exception("L'objet " . $_REQUEST["id_objet"] . " n'a pas été trouvé dans la session");
 
-            // On l'ajoute dans l'inventaire et on le stocke dans la BD
-            // Avant de faire ca, on supprime l'id genere par le ObjectFactory
-            unset($achete->id);
-            $achete->utilisateur = $_SESSION["utilisateur"];
-            $achete->save();
+            // Controle d'argent disponible
+            if ($_SESSION["utilisateur"]->argent >= $achete->prix) {
 
-            // On le supprime du marche
-            unset($_SESSION["objets_marche"][$key_achete]);
+                // On l'ajoute dans l'inventaire et on le stocke dans la BD
+                // Avant de faire ca, on supprime l'id genere par le ObjectFactory
+                unset($achete->id);
+                $achete->save();
 
-            retourner_succes();
+                // On le supprime du marche
+                unset($_SESSION["objets_marche"][$key_achete]);
+
+                // Reduction de l'argent
+                $_SESSION["utilisateur"]->argent -= $achete->prix;
+
+                retourner_succes(array("argent" => $_SESSION["utilisateur"]->argent));
+            }
+            else {
+                retourner_erreur("Tu n'as pas suffisamment d'argent.");
+            }
         }
         catch(Exception $ex) {
             retourner_erreur($ex->getMessage());
@@ -366,54 +474,21 @@
 
     function liste_vetements() {
         try {
-            set_inventaire();
-            echo get_contenu_modal("view/habiller.php", "Habiller");
+            $liste = (new Vetement())->getByUtilisateur($_SESSION["utilisateur"]->id);
+            /*
+            // Un petit detail, il faut supprimer les objets associes a une mascotte
+            for ($i = 0; $i < count($liste); $i++) {
+                if ($liste[$i]->id_mascotte)
+                    unset($liste[$i]);
+            }
+            */
+
+            $_SESSION["inventaire_habiller"] = $liste;
+            //$_SESSION["mascotte"]->vetements = (new Vetement())->getByMascotte($_SESSION["mascotte"]->id);
+            echo get_contenu_modal("view/liste_vetements.php", "Habiller");
         }
         catch(Exception $ex) {
-            retourner_erreur($ex->getMessage());
-        }
-    }
-
-    // Fonction auxiliare pour supporter le drag and drop entre l'inventaire et la mascotte
-    function drag_drop($id_objet, &$liste_drag, &$liste_drop, $vers_mascotte) {
-        try {
-            // On cherche l'objet dans la liste de départ
-            $key_objet = null;
-            $objet = null;
-            foreach ($liste_drag as $key => $o) {
-                if ($o->id == $id_objet) {
-                    $objet = $o;
-                    $key_objet = $key;
-                    break;
-                }
-            }
-            if ($objet == null)
-                throw new Exception("L'objet " . $id_objet . " n'a pas été trouvé dans la session");
-
-            // Les objets vont de la mascotte à l'inventaire ou viceversa.
-            // Le paramètre $vers_mascotte permet de déterminer comment affecter la base de données.
-            if ($vers_mascotte) {
-                unset($objet->utilisateur);
-                unset($objet->id_utilisateur);
-                $objet->mascotte = $_SESSION["mascotte"];
-                $objet->id_mascotte = $objet->mascotte->id;
-            }
-            else {
-                unset($objet->mascotte);
-                unset($objet->id_mascotte);
-                $objet->utilisateur = $_SESSION["utilisateur"];
-                $objet->id_utilisateur = $objet->utilisateur->id;
-            }
-
-            // Modification dans la base de données
-            $objet->update();
-
-            // On le déplace de liste
-            $liste_drop[] = $objet;
-            unset($liste_drag[$key_objet]);
-        }
-        catch(Exception $ex) {
-            throw new Exception("Erreur de drag&drop. " . $ex->getMessage());
+            echo $ex->getMessage();
         }
     }
 
@@ -437,7 +512,7 @@
     function deshabiller() {
         try {
             if (! isset($_SESSION["inventaire_habiller"]))
-                throw new Exception("La liste de vêtements n'a pas été chargée dans la session");
+                $_SESSION["inventaire_habiller"] = array();
 
             drag_drop($_REQUEST["id_objet"], $_SESSION["mascotte"]->vetements, $_SESSION["inventaire_habiller"], false);
 
@@ -450,23 +525,33 @@
 
     function liste_decorations() {
         try {
-            set_inventaire();
-            echo get_contenu_modal("view/environnement.php", "Modifier environnement");
+            $liste = (new Decoration())->getByUtilisateur($_SESSION["utilisateur"]->id);
+            /*
+            // Un petit detail, il faut supprimer les objets associes a une mascotte
+            for ($i = 0; $i < count($liste); $i++) {
+                if ($liste[$i]->id_mascotte)
+                    unset($liste[$i]);
+            }
+            */
+
+            $_SESSION["inventaire_environn"] = $liste;
+            //$_SESSION["mascotte"]->decorations = (new Decoration())->getByMascotte($_SESSION["mascotte"]->id);
+            echo get_contenu_modal("view/liste_decorations.php", "Modifier environnement");
         }
         catch(Exception $ex) {
-            retourner_erreur($ex->getMessage());
+            echo $ex->getMessage();
         }
     }
 
     function ajouter_decoration() {
         try {
-            if (! isset($_SESSION["inventaire_environnement"]))
+            if (! isset($_SESSION["inventaire_environn"]))
                 throw new Exception("La liste de décorations n'a pas été chargée dans la session");
 
             if (! isset($_SESSION["mascotte"]->decorations))
                 $_SESSION["mascotte"]->decorations = array();
 
-            drag_drop($_REQUEST["id_objet"], $_SESSION["inventaire_environnement"], $_SESSION["mascotte"]->decorations, true);
+            drag_drop($_REQUEST["id_objet"], $_SESSION["inventaire_environn"], $_SESSION["mascotte"]->decorations, true);
 
             retourner_succes();
         }
@@ -477,11 +562,61 @@
 
     function supprimer_decoration() {
         try {
-            if (! isset($_SESSION["inventaire_environnement"]))
-                throw new Exception("La liste de décorations n'a pas été chargée dans la session");
+            if (! isset($_SESSION["inventaire_environn"]))
+                $_SESSION["inventaire_environn"] = array();
 
-            drag_drop($_REQUEST["id_objet"], $_SESSION["mascotte"]->decorations, $_SESSION["inventaire_environnement"], false);
+            drag_drop($_REQUEST["id_objet"], $_SESSION["mascotte"]->decorations, $_SESSION["inventaire_environn"], false);
 
+            retourner_succes();
+        }
+        catch(Exception $ex) {
+            retourner_erreur($ex->getMessage());
+        }
+    }
+
+    function jouer() {
+        try {
+            $_SESSION["utilisateur"]->argent += rand(-1, 1) * (rand(0, 20) * 10);
+            retourner_succes(array("argent" => $_SESSION["utilisateur"]->argent));
+        }
+        catch(Exception $ex) {
+            retourner_erreur($ex->getMessage());
+        }
+    }
+
+    function creer_mascotte() {
+        try {
+            $classe = $_REQUEST["classe"];
+            $m = new $classe();
+
+            $m->classe = $classe;
+            $m->id_utilisateur = $_SESSION["utilisateur"]->id;
+            $m->id_maladie = null;
+            $m->id_env_prefere = rand(1, 4);
+            $m->id_env_actuel = rand(1, 4);
+            $m->nom = $_REQUEST["nom"];
+            $m->is_male = ($_REQUEST["sexe"] == "male");
+            $m->age = 0;
+            $m->bonheur = 100;
+            $m->sante = 100;
+            $m->faim = 0;
+            $m->pourc_maladie = 0;
+
+            $m->save();
+
+            // On charge les donnes de la mascotte
+            charger_mascotte();
+
+            retourner_succes();
+        }
+        catch(Exception $ex) {
+            retourner_erreur($ex->getMessage());
+        }
+    }
+
+    function tuer() {
+        try {
+            $_SESSION["mascotte"]->del_complex();
             retourner_succes();
         }
         catch(Exception $ex) {

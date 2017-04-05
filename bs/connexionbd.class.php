@@ -2,13 +2,13 @@
 
 
 define ('HOST', 'localhost') ;
-define ('USER', 'root'  ) ;
+define ('USER', ''  ) ;
 define ('PASS', '' ) ;
 define ('DB', 'tamagogo' ) ;
 /*
 define ('HOST', 'pedago02a.univ-avignon.fr') ;
-define ('USER', 'uapv1602799'  ) ;
-define ('PASS', 'cFHJEJ' ) ;
+define ('USER', ''  ) ;
+define ('PASS', '' ) ;
 define ('DB', 'etd' ) ;
 */
 

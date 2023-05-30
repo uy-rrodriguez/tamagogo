@@ -10,7 +10,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>tamaGOGO</title>
-	<script src="js/jquery-1.10.2.js"></script>
+	<script src="js/jquery.min.js"></script>
 	<script src="js/jquery-ui-1.11.4.js"></script>
     <script src="bootstrap-3.3.6/js/bootstrap.min.js"></script>
 	<script src="js/functions.js"></script>
